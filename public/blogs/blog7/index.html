@@ -1,0 +1,1602 @@
+<!DOCTYPE HTML>
+<html>
+
+    <head>
+	<meta charset="utf-8" />
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+	<meta name="description" content="A Masters in Analytics and Management student at London Business School">
+	<meta name="author" content="Xinyu Yu">
+	<meta name="generator" content="Hugo 0.74.3" />
+	<title>Movies Analysis &middot; Portfolio website for Xinyu Yu</title>
+	<!-- Stylesheets -->
+	
+	<link rel="stylesheet" href="/css/main.css"/>
+	
+	
+
+	
+
+	<!-- Custom Fonts -->
+	<link href="/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+
+	
+	<link rel="shortcut icon" type="image/x-icon" href="/favicon.ico">
+	<link rel="icon" type="image/x-icon" href="/favicon.ico">
+	
+
+	<!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+	<!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+	<!--[if lt IE 9]>
+	<script src="js/ie/html5shiv.js"></script>
+	<script src="js/ie/html5shiv.jsrespond.min.js"></script>
+	<![endif]-->
+</head>
+
+    <body>
+
+    <!-- Wrapper -->
+        <div id="wrapper">
+
+            <!-- Header -->
+    <header id="header" class="alt">
+        <a href="/" class="logo"><strong>Xinyu Yu Portfolio</strong> <span></span></a>
+        <nav>
+            <a href="#menu">Menu</a>
+        </nav>
+    </header>
+
+<!-- Menu -->
+    <nav id="menu">
+        <ul class="links">
+            
+                <li><a href="/">Home</a></li>
+            
+
+        </ul>
+        <ul class="actions vertical">
+            
+                <li><a href="/blogs" class="button special fit">My Projects</a></li>
+            
+            
+        </ul>
+    </nav>
+
+        <!-- Main -->
+            <div id="main" class="alt">
+
+                
+                    <section id="one">
+                        <div class="inner">
+                            <header class="major">
+                                <h1>Movies Analysis</h1>
+                            </header>
+                            
+                                <span class="image main"><img src="/img/blogs/movies.jpg" alt="" /></span>
+                            
+                            
+
+
+<div id="analysis-of-movies--imdb-dataset" class="section level1">
+<h1>Analysis of movies- IMDB dataset</h1>
+<p>We will look at a subset sample of movies, taken from the <a href="https://www.kaggle.com/carolzhangdc/imdb-5000-movie-dataset">Kaggle IMDB 5000 movie dataset</a></p>
+<pre class="r"><code># Save data set in variable &quot;movies&quot;
+movies &lt;- read_csv(here::here(&quot;data&quot;, &quot;movies.csv&quot;))
+
+# Take a look at the data frame
+glimpse(movies)</code></pre>
+<pre><code>## Rows: 2,961
+## Columns: 11
+## $ title               &lt;chr&gt; &quot;Avatar&quot;, &quot;Titanic&quot;, &quot;Jurassic World&quot;, &quot;The Aven…
+## $ genre               &lt;chr&gt; &quot;Action&quot;, &quot;Drama&quot;, &quot;Action&quot;, &quot;Action&quot;, &quot;Action&quot;,…
+## $ director            &lt;chr&gt; &quot;James Cameron&quot;, &quot;James Cameron&quot;, &quot;Colin Trevorr…
+## $ year                &lt;dbl&gt; 2009, 1997, 2015, 2012, 2008, 1999, 1977, 2015, …
+## $ duration            &lt;dbl&gt; 178, 194, 124, 173, 152, 136, 125, 141, 164, 93,…
+## $ gross               &lt;dbl&gt; 760505847, 658672302, 652177271, 623279547, 5333…
+## $ budget              &lt;dbl&gt; 237000000, 200000000, 150000000, 220000000, 1850…
+## $ cast_facebook_likes &lt;dbl&gt; 4834, 45223, 8458, 87697, 57802, 37723, 13485, 9…
+## $ votes               &lt;dbl&gt; 886204, 793059, 418214, 995415, 1676169, 534658,…
+## $ reviews             &lt;dbl&gt; 3777, 2843, 1934, 2425, 5312, 3917, 1752, 1752, …
+## $ rating              &lt;dbl&gt; 7.9, 7.7, 7.0, 8.1, 9.0, 6.5, 8.7, 7.5, 8.5, 7.2…</code></pre>
+<div id="data-cleaning" class="section level2">
+<h2>Data Cleaning:</h2>
+<ul>
+<li>We will take a look at <code>NA</code> and duplicated values:</li>
+</ul>
+<pre class="r"><code># Sum of duplicates
+duplicates &lt;-sum(any(duplicated(movies)))
+# Sum of NA values
+na_values &lt;- sum(any(is.na(movies)))
+
+# Check for NA values in the data frame. If return is FALSE, then the sum should yield 0.
+print(paste0(&quot;Total NA in movies data set: &quot;, na_values), quote=FALSE)</code></pre>
+<pre><code>## [1] Total NA in movies data set: 0</code></pre>
+<pre class="r"><code># Check for duplicate values. If return is FALSE, then the sum should yield 0.
+print(paste0(&quot;Total duplicates in movies data set: &quot;, duplicates), quote=FALSE)</code></pre>
+<pre><code>## [1] Total duplicates in movies data set: 0</code></pre>
+<p>Both answers are <code>FALSE</code>. The sum of both outcomes yields <code>0</code>. Therefore there no <code>NA</code> nor <code>duplicate</code> values.</p>
+<p>Are we sure about this? Let’s analyse it in further detail!</p>
+<pre class="r"><code>skim(movies) # Data Summary</code></pre>
+<table>
+<caption>(#tab:duplicates_NA_2)Data summary</caption>
+<tbody>
+<tr class="odd">
+<td align="left">Name</td>
+<td align="left">movies</td>
+</tr>
+<tr class="even">
+<td align="left">Number of rows</td>
+<td align="left">2961</td>
+</tr>
+<tr class="odd">
+<td align="left">Number of columns</td>
+<td align="left">11</td>
+</tr>
+<tr class="even">
+<td align="left">_______________________</td>
+<td align="left"></td>
+</tr>
+<tr class="odd">
+<td align="left">Column type frequency:</td>
+<td align="left"></td>
+</tr>
+<tr class="even">
+<td align="left">character</td>
+<td align="left">3</td>
+</tr>
+<tr class="odd">
+<td align="left">numeric</td>
+<td align="left">8</td>
+</tr>
+<tr class="even">
+<td align="left">________________________</td>
+<td align="left"></td>
+</tr>
+<tr class="odd">
+<td align="left">Group variables</td>
+<td align="left">None</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Variable type: character</strong></p>
+<table>
+<thead>
+<tr class="header">
+<th align="left">skim_variable</th>
+<th align="right">n_missing</th>
+<th align="right">complete_rate</th>
+<th align="right">min</th>
+<th align="right">max</th>
+<th align="right">empty</th>
+<th align="right">n_unique</th>
+<th align="right">whitespace</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">title</td>
+<td align="right">0</td>
+<td align="right">1</td>
+<td align="right">1</td>
+<td align="right">83</td>
+<td align="right">0</td>
+<td align="right">2907</td>
+<td align="right">0</td>
+</tr>
+<tr class="even">
+<td align="left">genre</td>
+<td align="right">0</td>
+<td align="right">1</td>
+<td align="right">5</td>
+<td align="right">11</td>
+<td align="right">0</td>
+<td align="right">17</td>
+<td align="right">0</td>
+</tr>
+<tr class="odd">
+<td align="left">director</td>
+<td align="right">0</td>
+<td align="right">1</td>
+<td align="right">3</td>
+<td align="right">32</td>
+<td align="right">0</td>
+<td align="right">1366</td>
+<td align="right">0</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Variable type: numeric</strong></p>
+<table>
+<colgroup>
+<col width="15%" />
+<col width="7%" />
+<col width="10%" />
+<col width="9%" />
+<col width="9%" />
+<col width="5%" />
+<col width="8%" />
+<col width="8%" />
+<col width="8%" />
+<col width="9%" />
+<col width="8%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th align="left">skim_variable</th>
+<th align="right">n_missing</th>
+<th align="right">complete_rate</th>
+<th align="right">mean</th>
+<th align="right">sd</th>
+<th align="right">p0</th>
+<th align="right">p25</th>
+<th align="right">p50</th>
+<th align="right">p75</th>
+<th align="right">p100</th>
+<th align="left">hist</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">year</td>
+<td align="right">0</td>
+<td align="right">1</td>
+<td align="right">2002.90</td>
+<td align="right">9.95</td>
+<td align="right">1920.0</td>
+<td align="right">1999.0</td>
+<td align="right">2004.0</td>
+<td align="right">2010.0</td>
+<td align="right">2016.0</td>
+<td align="left">▁▁▁▂▇</td>
+</tr>
+<tr class="even">
+<td align="left">duration</td>
+<td align="right">0</td>
+<td align="right">1</td>
+<td align="right">109.65</td>
+<td align="right">22.17</td>
+<td align="right">37.0</td>
+<td align="right">95.0</td>
+<td align="right">106.0</td>
+<td align="right">119.0</td>
+<td align="right">330.0</td>
+<td align="left">▃▇▁▁▁</td>
+</tr>
+<tr class="odd">
+<td align="left">gross</td>
+<td align="right">0</td>
+<td align="right">1</td>
+<td align="right">58090400.90</td>
+<td align="right">72469621.94</td>
+<td align="right">703.0</td>
+<td align="right">12276810.0</td>
+<td align="right">34703228.0</td>
+<td align="right">75590286.0</td>
+<td align="right">760505847.0</td>
+<td align="left">▇▁▁▁▁</td>
+</tr>
+<tr class="even">
+<td align="left">budget</td>
+<td align="right">0</td>
+<td align="right">1</td>
+<td align="right">40619384.06</td>
+<td align="right">43682007.78</td>
+<td align="right">218.0</td>
+<td align="right">11000000.0</td>
+<td align="right">26000000.0</td>
+<td align="right">55000000.0</td>
+<td align="right">300000000.0</td>
+<td align="left">▇▂▁▁▁</td>
+</tr>
+<tr class="odd">
+<td align="left">cast_facebook_likes</td>
+<td align="right">0</td>
+<td align="right">1</td>
+<td align="right">12393.76</td>
+<td align="right">20530.11</td>
+<td align="right">0.0</td>
+<td align="right">2241.0</td>
+<td align="right">4604.0</td>
+<td align="right">16926.0</td>
+<td align="right">656730.0</td>
+<td align="left">▇▁▁▁▁</td>
+</tr>
+<tr class="even">
+<td align="left">votes</td>
+<td align="right">0</td>
+<td align="right">1</td>
+<td align="right">109307.49</td>
+<td align="right">158143.91</td>
+<td align="right">5.0</td>
+<td align="right">19918.0</td>
+<td align="right">55749.0</td>
+<td align="right">133348.0</td>
+<td align="right">1689764.0</td>
+<td align="left">▇▁▁▁▁</td>
+</tr>
+<tr class="odd">
+<td align="left">reviews</td>
+<td align="right">0</td>
+<td align="right">1</td>
+<td align="right">503.31</td>
+<td align="right">493.74</td>
+<td align="right">2.0</td>
+<td align="right">199.0</td>
+<td align="right">364.0</td>
+<td align="right">631.0</td>
+<td align="right">5312.0</td>
+<td align="left">▇▁▁▁▁</td>
+</tr>
+<tr class="even">
+<td align="left">rating</td>
+<td align="right">0</td>
+<td align="right">1</td>
+<td align="right">6.39</td>
+<td align="right">1.05</td>
+<td align="right">1.6</td>
+<td align="right">5.8</td>
+<td align="right">6.5</td>
+<td align="right">7.1</td>
+<td align="right">9.3</td>
+<td align="left">▁▁▆▇▁</td>
+</tr>
+</tbody>
+</table>
+<p>If we take a look at the titles, it says <strong>“unique” = 2907</strong>. However, there are <strong>2961 rows</strong>. There is a discrepancy of about <strong>54</strong> movie titles. <em>But why is that?</em></p>
+<pre class="r"><code>an_dup&lt;- movies %&gt;%
+  filter(duplicated(movies$title)) # Filter by duplicated in column title
+
+# Show results
+an_dup</code></pre>
+<pre><code>## # A tibble: 54 x 11
+##    title genre director  year duration  gross budget cast_facebook_l…  votes
+##    &lt;chr&gt; &lt;chr&gt; &lt;chr&gt;    &lt;dbl&gt;    &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;            &lt;dbl&gt;  &lt;dbl&gt;
+##  1 Spid… Acti… Sam Rai…  2007      156 3.37e8 2.58e8            46055 383071
+##  2 Alic… Adve… Tim Bur…  2010      108 3.34e8 2.00e8            79957 306336
+##  3 Oz t… Adve… Sam Rai…  2013      130 2.35e8 2.15e8            73441 175413
+##  4 Cind… Drama Kenneth…  2015      105 2.01e8 9.50e7             4671 103749
+##  5 Twil… Drama Catheri…  2008      122 1.91e8 3.70e7            44060 348007
+##  6 Teen… Acti… Jonatha…  2014      101 1.91e8 1.25e8             2690 167089
+##  7 Plan… Acti… Tim Bur…  2001      119 1.80e8 1.00e8             2776 177729
+##  8 Home  Adve… Tim Joh…  2015       94 1.77e8 1.35e8            17883  70133
+##  9 Home  Adve… Tim Joh…  2015       94 1.77e8 1.35e8            17883  70136
+## 10 TRON… Acti… Joseph …  2010      125 1.72e8 1.70e8            25549 264186
+## # … with 44 more rows, and 2 more variables: reviews &lt;dbl&gt;, rating &lt;dbl&gt;</code></pre>
+<p>Indeed, these 54 titles are repeated. However the result did not come up with <code>duplicated()</code>. We will take a few examples and analyse why. One hypothesis would be that at least 1 column is slightly different.</p>
+<pre class="r"><code>dup_sample&lt;-movies %&gt;%
+  filter(title %in% c(&quot;Spider-Man 3&quot;, &quot;Alice in Wonderland&quot;, &quot;Cinderella&quot;, &quot;Twilight&quot;))
+
+# Show first 10 results
+kable(head(dup_sample, 10))</code></pre>
+<table style="width:100%;">
+<colgroup>
+<col width="15%" />
+<col width="7%" />
+<col width="15%" />
+<col width="3%" />
+<col width="7%" />
+<col width="7%" />
+<col width="7%" />
+<col width="15%" />
+<col width="5%" />
+<col width="6%" />
+<col width="5%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th align="left">title</th>
+<th align="left">genre</th>
+<th align="left">director</th>
+<th align="right">year</th>
+<th align="right">duration</th>
+<th align="right">gross</th>
+<th align="right">budget</th>
+<th align="right">cast_facebook_likes</th>
+<th align="right">votes</th>
+<th align="right">reviews</th>
+<th align="right">rating</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">Spider-Man 3</td>
+<td align="left">Action</td>
+<td align="left">Sam Raimi</td>
+<td align="right">2007</td>
+<td align="right">156</td>
+<td align="right">336530303</td>
+<td align="right">258000000</td>
+<td align="right">46055</td>
+<td align="right">383056</td>
+<td align="right">2294</td>
+<td align="right">6.2</td>
+</tr>
+<tr class="even">
+<td align="left">Spider-Man 3</td>
+<td align="left">Action</td>
+<td align="left">Sam Raimi</td>
+<td align="right">2007</td>
+<td align="right">156</td>
+<td align="right">336530303</td>
+<td align="right">258000000</td>
+<td align="right">46055</td>
+<td align="right">383071</td>
+<td align="right">2294</td>
+<td align="right">6.2</td>
+</tr>
+<tr class="odd">
+<td align="left">Alice in Wonderland</td>
+<td align="left">Adventure</td>
+<td align="left">Tim Burton</td>
+<td align="right">2010</td>
+<td align="right">108</td>
+<td align="right">334185206</td>
+<td align="right">200000000</td>
+<td align="right">79957</td>
+<td align="right">306320</td>
+<td align="right">1187</td>
+<td align="right">6.5</td>
+</tr>
+<tr class="even">
+<td align="left">Alice in Wonderland</td>
+<td align="left">Adventure</td>
+<td align="left">Tim Burton</td>
+<td align="right">2010</td>
+<td align="right">108</td>
+<td align="right">334185206</td>
+<td align="right">200000000</td>
+<td align="right">79957</td>
+<td align="right">306336</td>
+<td align="right">1187</td>
+<td align="right">6.5</td>
+</tr>
+<tr class="odd">
+<td align="left">Cinderella</td>
+<td align="left">Drama</td>
+<td align="left">Kenneth Branagh</td>
+<td align="right">2015</td>
+<td align="right">105</td>
+<td align="right">201148159</td>
+<td align="right">95000000</td>
+<td align="right">4671</td>
+<td align="right">103737</td>
+<td align="right">665</td>
+<td align="right">7.0</td>
+</tr>
+<tr class="even">
+<td align="left">Cinderella</td>
+<td align="left">Drama</td>
+<td align="left">Kenneth Branagh</td>
+<td align="right">2015</td>
+<td align="right">105</td>
+<td align="right">201148159</td>
+<td align="right">95000000</td>
+<td align="right">4671</td>
+<td align="right">103749</td>
+<td align="right">666</td>
+<td align="right">7.0</td>
+</tr>
+<tr class="odd">
+<td align="left">Twilight</td>
+<td align="left">Drama</td>
+<td align="left">Catherine Hardwicke</td>
+<td align="right">2008</td>
+<td align="right">122</td>
+<td align="right">191449475</td>
+<td align="right">37000000</td>
+<td align="right">44061</td>
+<td align="right">348010</td>
+<td align="right">1885</td>
+<td align="right">5.2</td>
+</tr>
+<tr class="even">
+<td align="left">Twilight</td>
+<td align="left">Drama</td>
+<td align="left">Catherine Hardwicke</td>
+<td align="right">2008</td>
+<td align="right">122</td>
+<td align="right">191449475</td>
+<td align="right">37000000</td>
+<td align="right">44060</td>
+<td align="right">348007</td>
+<td align="right">1885</td>
+<td align="right">5.2</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Aha!</strong> As it seems, there happens to be a discrepancy with the votes. These duplicated records have a different number of votes.</p>
+<p>Since the difference is not significant, we will proceed to eliminate these duplicates based on the movie title and continue our analysis that way.</p>
+<pre class="r"><code>movies &lt;- movies %&gt;%
+  filter(!duplicated(movies$title)) # filter by not duplicated on column title
+
+movies</code></pre>
+<pre><code>## # A tibble: 2,907 x 11
+##    title genre director  year duration  gross budget cast_facebook_l…  votes
+##    &lt;chr&gt; &lt;chr&gt; &lt;chr&gt;    &lt;dbl&gt;    &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;            &lt;dbl&gt;  &lt;dbl&gt;
+##  1 Avat… Acti… James C…  2009      178 7.61e8 2.37e8             4834 8.86e5
+##  2 Tita… Drama James C…  1997      194 6.59e8 2.00e8            45223 7.93e5
+##  3 Jura… Acti… Colin T…  2015      124 6.52e8 1.50e8             8458 4.18e5
+##  4 The … Acti… Joss Wh…  2012      173 6.23e8 2.20e8            87697 9.95e5
+##  5 The … Acti… Christo…  2008      152 5.33e8 1.85e8            57802 1.68e6
+##  6 Star… Acti… George …  1999      136 4.75e8 1.15e8            37723 5.35e5
+##  7 Star… Acti… George …  1977      125 4.61e8 1.10e7            13485 9.11e5
+##  8 Aven… Acti… Joss Wh…  2015      141 4.59e8 2.50e8            92000 4.63e5
+##  9 The … Acti… Christo…  2012      164 4.48e8 2.50e8           106759 1.14e6
+## 10 Shre… Adve… Andrew …  2004       93 4.36e8 1.50e8             1148 3.15e5
+## # … with 2,897 more rows, and 2 more variables: reviews &lt;dbl&gt;, rating &lt;dbl&gt;</code></pre>
+<pre class="r"><code>skim(movies)</code></pre>
+<table>
+<caption>(#tab:movies_cleaned)Data summary</caption>
+<tbody>
+<tr class="odd">
+<td align="left">Name</td>
+<td align="left">movies</td>
+</tr>
+<tr class="even">
+<td align="left">Number of rows</td>
+<td align="left">2907</td>
+</tr>
+<tr class="odd">
+<td align="left">Number of columns</td>
+<td align="left">11</td>
+</tr>
+<tr class="even">
+<td align="left">_______________________</td>
+<td align="left"></td>
+</tr>
+<tr class="odd">
+<td align="left">Column type frequency:</td>
+<td align="left"></td>
+</tr>
+<tr class="even">
+<td align="left">character</td>
+<td align="left">3</td>
+</tr>
+<tr class="odd">
+<td align="left">numeric</td>
+<td align="left">8</td>
+</tr>
+<tr class="even">
+<td align="left">________________________</td>
+<td align="left"></td>
+</tr>
+<tr class="odd">
+<td align="left">Group variables</td>
+<td align="left">None</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Variable type: character</strong></p>
+<table>
+<thead>
+<tr class="header">
+<th align="left">skim_variable</th>
+<th align="right">n_missing</th>
+<th align="right">complete_rate</th>
+<th align="right">min</th>
+<th align="right">max</th>
+<th align="right">empty</th>
+<th align="right">n_unique</th>
+<th align="right">whitespace</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">title</td>
+<td align="right">0</td>
+<td align="right">1</td>
+<td align="right">1</td>
+<td align="right">83</td>
+<td align="right">0</td>
+<td align="right">2907</td>
+<td align="right">0</td>
+</tr>
+<tr class="even">
+<td align="left">genre</td>
+<td align="right">0</td>
+<td align="right">1</td>
+<td align="right">5</td>
+<td align="right">11</td>
+<td align="right">0</td>
+<td align="right">17</td>
+<td align="right">0</td>
+</tr>
+<tr class="odd">
+<td align="left">director</td>
+<td align="right">0</td>
+<td align="right">1</td>
+<td align="right">3</td>
+<td align="right">32</td>
+<td align="right">0</td>
+<td align="right">1366</td>
+<td align="right">0</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Variable type: numeric</strong></p>
+<table>
+<colgroup>
+<col width="15%" />
+<col width="7%" />
+<col width="10%" />
+<col width="9%" />
+<col width="9%" />
+<col width="5%" />
+<col width="8%" />
+<col width="8%" />
+<col width="8%" />
+<col width="9%" />
+<col width="8%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th align="left">skim_variable</th>
+<th align="right">n_missing</th>
+<th align="right">complete_rate</th>
+<th align="right">mean</th>
+<th align="right">sd</th>
+<th align="right">p0</th>
+<th align="right">p25</th>
+<th align="right">p50</th>
+<th align="right">p75</th>
+<th align="right">p100</th>
+<th align="left">hist</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">year</td>
+<td align="right">0</td>
+<td align="right">1</td>
+<td align="right">2002.85</td>
+<td align="right">9.92</td>
+<td align="right">1920.0</td>
+<td align="right">1999.0</td>
+<td align="right">2004.0</td>
+<td align="right">2010.0</td>
+<td align="right">2016.0</td>
+<td align="left">▁▁▁▂▇</td>
+</tr>
+<tr class="even">
+<td align="left">duration</td>
+<td align="right">0</td>
+<td align="right">1</td>
+<td align="right">109.61</td>
+<td align="right">22.30</td>
+<td align="right">37.0</td>
+<td align="right">95.0</td>
+<td align="right">105.0</td>
+<td align="right">119.0</td>
+<td align="right">330.0</td>
+<td align="left">▃▇▁▁▁</td>
+</tr>
+<tr class="odd">
+<td align="left">gross</td>
+<td align="right">0</td>
+<td align="right">1</td>
+<td align="right">57627446.54</td>
+<td align="right">72289052.80</td>
+<td align="right">703.0</td>
+<td align="right">11981360.5</td>
+<td align="right">34468224.0</td>
+<td align="right">75073702.0</td>
+<td align="right">760505847.0</td>
+<td align="left">▇▁▁▁▁</td>
+</tr>
+<tr class="even">
+<td align="left">budget</td>
+<td align="right">0</td>
+<td align="right">1</td>
+<td align="right">40177369.34</td>
+<td align="right">43196408.78</td>
+<td align="right">218.0</td>
+<td align="right">11000000.0</td>
+<td align="right">25000000.0</td>
+<td align="right">55000000.0</td>
+<td align="right">300000000.0</td>
+<td align="left">▇▂▁▁▁</td>
+</tr>
+<tr class="odd">
+<td align="left">cast_facebook_likes</td>
+<td align="right">0</td>
+<td align="right">1</td>
+<td align="right">12278.05</td>
+<td align="right">20536.33</td>
+<td align="right">0.0</td>
+<td align="right">2215.5</td>
+<td align="right">4537.0</td>
+<td align="right">16760.0</td>
+<td align="right">656730.0</td>
+<td align="left">▇▁▁▁▁</td>
+</tr>
+<tr class="even">
+<td align="left">votes</td>
+<td align="right">0</td>
+<td align="right">1</td>
+<td align="right">108878.41</td>
+<td align="right">159080.81</td>
+<td align="right">5.0</td>
+<td align="right">19472.5</td>
+<td align="right">54710.0</td>
+<td align="right">132098.5</td>
+<td align="right">1689764.0</td>
+<td align="left">▇▁▁▁▁</td>
+</tr>
+<tr class="odd">
+<td align="left">reviews</td>
+<td align="right">0</td>
+<td align="right">1</td>
+<td align="right">498.47</td>
+<td align="right">493.14</td>
+<td align="right">2.0</td>
+<td align="right">197.0</td>
+<td align="right">358.0</td>
+<td align="right">624.0</td>
+<td align="right">5312.0</td>
+<td align="left">▇▁▁▁▁</td>
+</tr>
+<tr class="even">
+<td align="left">rating</td>
+<td align="right">0</td>
+<td align="right">1</td>
+<td align="right">6.39</td>
+<td align="right">1.06</td>
+<td align="right">1.6</td>
+<td align="right">5.8</td>
+<td align="right">6.5</td>
+<td align="right">7.1</td>
+<td align="right">9.3</td>
+<td align="left">▁▁▆▇▁</td>
+</tr>
+</tbody>
+</table>
+<p>Our data set is now good to go: 2907 unique titles, 2907 rows.</p>
+</div>
+<div id="analysis" class="section level2">
+<h2>Analysis</h2>
+<div id="movies-and-genre" class="section level3">
+<h3>Movies and Genre</h3>
+<p>Let’s produce a table with the rank of movies by genre</p>
+<pre class="r"><code>movies_by_genre &lt;- movies %&gt;%  # Save in object &#39;movies_by_gender&#39;
+  group_by(genre) %&gt;% # Group by genre
+  summarise(count = n()) %&gt;% # Create column counting values
+  arrange(desc(count)) # Arrange by descending order
+
+kable(movies_by_genre)</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th align="left">genre</th>
+<th align="right">count</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">Comedy</td>
+<td align="right">844</td>
+</tr>
+<tr class="even">
+<td align="left">Action</td>
+<td align="right">719</td>
+</tr>
+<tr class="odd">
+<td align="left">Drama</td>
+<td align="right">484</td>
+</tr>
+<tr class="even">
+<td align="left">Adventure</td>
+<td align="right">281</td>
+</tr>
+<tr class="odd">
+<td align="left">Crime</td>
+<td align="right">198</td>
+</tr>
+<tr class="even">
+<td align="left">Biography</td>
+<td align="right">135</td>
+</tr>
+<tr class="odd">
+<td align="left">Horror</td>
+<td align="right">128</td>
+</tr>
+<tr class="even">
+<td align="left">Animation</td>
+<td align="right">35</td>
+</tr>
+<tr class="odd">
+<td align="left">Fantasy</td>
+<td align="right">26</td>
+</tr>
+<tr class="even">
+<td align="left">Documentary</td>
+<td align="right">25</td>
+</tr>
+<tr class="odd">
+<td align="left">Mystery</td>
+<td align="right">15</td>
+</tr>
+<tr class="even">
+<td align="left">Sci-Fi</td>
+<td align="right">7</td>
+</tr>
+<tr class="odd">
+<td align="left">Family</td>
+<td align="right">3</td>
+</tr>
+<tr class="even">
+<td align="left">Musical</td>
+<td align="right">2</td>
+</tr>
+<tr class="odd">
+<td align="left">Romance</td>
+<td align="right">2</td>
+</tr>
+<tr class="even">
+<td align="left">Western</td>
+<td align="right">2</td>
+</tr>
+<tr class="odd">
+<td align="left">Thriller</td>
+<td align="right">1</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="gross-profit-and-budget" class="section level3">
+<h3>Gross Profit and Budget</h3>
+<p>We will now analyse the gross profit and budget.</p>
+<p>Let’s produce a table with the average gross earning and budget (<code>gross</code> and <code>budget</code>) by genre and analyse the <code>return_on_budget</code> to see how many $ did a movie make at the box office for each $ of its budget. We will show the first 10 results so as to take a look at the data set.</p>
+<pre class="r"><code>rob_movies &lt;- movies %&gt;%  # Save in object &quot;rob_movies&quot; - rob = return on budget
+  mutate(return_on_budget = (gross/budget)) # Calculate how much did a movie make at the box office for each $ of is budget
+
+# Show first 10 results
+kable(head(rob_movies, 10))</code></pre>
+<table style="width:100%;">
+<colgroup>
+<col width="25%" />
+<col width="6%" />
+<col width="10%" />
+<col width="3%" />
+<col width="5%" />
+<col width="6%" />
+<col width="6%" />
+<col width="12%" />
+<col width="4%" />
+<col width="4%" />
+<col width="4%" />
+<col width="10%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th align="left">title</th>
+<th align="left">genre</th>
+<th align="left">director</th>
+<th align="right">year</th>
+<th align="right">duration</th>
+<th align="right">gross</th>
+<th align="right">budget</th>
+<th align="right">cast_facebook_likes</th>
+<th align="right">votes</th>
+<th align="right">reviews</th>
+<th align="right">rating</th>
+<th align="right">return_on_budget</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">Avatar</td>
+<td align="left">Action</td>
+<td align="left">James Cameron</td>
+<td align="right">2009</td>
+<td align="right">178</td>
+<td align="right">760505847</td>
+<td align="right">237000000</td>
+<td align="right">4834</td>
+<td align="right">886204</td>
+<td align="right">3777</td>
+<td align="right">7.9</td>
+<td align="right">3.209</td>
+</tr>
+<tr class="even">
+<td align="left">Titanic</td>
+<td align="left">Drama</td>
+<td align="left">James Cameron</td>
+<td align="right">1997</td>
+<td align="right">194</td>
+<td align="right">658672302</td>
+<td align="right">200000000</td>
+<td align="right">45223</td>
+<td align="right">793059</td>
+<td align="right">2843</td>
+<td align="right">7.7</td>
+<td align="right">3.293</td>
+</tr>
+<tr class="odd">
+<td align="left">Jurassic World</td>
+<td align="left">Action</td>
+<td align="left">Colin Trevorrow</td>
+<td align="right">2015</td>
+<td align="right">124</td>
+<td align="right">652177271</td>
+<td align="right">150000000</td>
+<td align="right">8458</td>
+<td align="right">418214</td>
+<td align="right">1934</td>
+<td align="right">7.0</td>
+<td align="right">4.348</td>
+</tr>
+<tr class="even">
+<td align="left">The Avengers</td>
+<td align="left">Action</td>
+<td align="left">Joss Whedon</td>
+<td align="right">2012</td>
+<td align="right">173</td>
+<td align="right">623279547</td>
+<td align="right">220000000</td>
+<td align="right">87697</td>
+<td align="right">995415</td>
+<td align="right">2425</td>
+<td align="right">8.1</td>
+<td align="right">2.833</td>
+</tr>
+<tr class="odd">
+<td align="left">The Dark Knight</td>
+<td align="left">Action</td>
+<td align="left">Christopher Nolan</td>
+<td align="right">2008</td>
+<td align="right">152</td>
+<td align="right">533316061</td>
+<td align="right">185000000</td>
+<td align="right">57802</td>
+<td align="right">1676169</td>
+<td align="right">5312</td>
+<td align="right">9.0</td>
+<td align="right">2.883</td>
+</tr>
+<tr class="even">
+<td align="left">Star Wars: Episode I - The Phantom Menace</td>
+<td align="left">Action</td>
+<td align="left">George Lucas</td>
+<td align="right">1999</td>
+<td align="right">136</td>
+<td align="right">474544677</td>
+<td align="right">115000000</td>
+<td align="right">37723</td>
+<td align="right">534658</td>
+<td align="right">3917</td>
+<td align="right">6.5</td>
+<td align="right">4.127</td>
+</tr>
+<tr class="odd">
+<td align="left">Star Wars: Episode IV - A New Hope</td>
+<td align="left">Action</td>
+<td align="left">George Lucas</td>
+<td align="right">1977</td>
+<td align="right">125</td>
+<td align="right">460935665</td>
+<td align="right">11000000</td>
+<td align="right">13485</td>
+<td align="right">911097</td>
+<td align="right">1752</td>
+<td align="right">8.7</td>
+<td align="right">41.903</td>
+</tr>
+<tr class="even">
+<td align="left">Avengers: Age of Ultron</td>
+<td align="left">Action</td>
+<td align="left">Joss Whedon</td>
+<td align="right">2015</td>
+<td align="right">141</td>
+<td align="right">458991599</td>
+<td align="right">250000000</td>
+<td align="right">92000</td>
+<td align="right">462669</td>
+<td align="right">1752</td>
+<td align="right">7.5</td>
+<td align="right">1.836</td>
+</tr>
+<tr class="odd">
+<td align="left">The Dark Knight Rises</td>
+<td align="left">Action</td>
+<td align="left">Christopher Nolan</td>
+<td align="right">2012</td>
+<td align="right">164</td>
+<td align="right">448130642</td>
+<td align="right">250000000</td>
+<td align="right">106759</td>
+<td align="right">1144337</td>
+<td align="right">3514</td>
+<td align="right">8.5</td>
+<td align="right">1.792</td>
+</tr>
+<tr class="even">
+<td align="left">Shrek 2</td>
+<td align="left">Adventure</td>
+<td align="left">Andrew Adamson</td>
+<td align="right">2004</td>
+<td align="right">93</td>
+<td align="right">436471036</td>
+<td align="right">150000000</td>
+<td align="right">1148</td>
+<td align="right">314630</td>
+<td align="right">688</td>
+<td align="right">7.2</td>
+<td align="right">2.910</td>
+</tr>
+</tbody>
+</table>
+<p>The data set now has a column at the end with the return on budget. Useful as this might be, it’s not very neat to look at this from the movie level. We will group this by genre and analyse results. We will display the <code>$</code> in Millions of dollars.</p>
+<pre class="r"><code>rob_by_genre &lt;- rob_movies %&gt;% # Save into new object
+  group_by(genre) %&gt;% # group by genre - rows will collapse
+  summarise(gross_mean = mean(gross), budget_mean = mean(budget), return_on_budget = mean(return_on_budget)) %&gt;% # Calculate average of gross and budget
+  arrange(desc(return_on_budget)) # arrange in descending order
+
+# Since the view of this tab is not very neat, we will proceed to transform the values in &quot;gross_mean&quot; and &quot;budget_mean&quot; into Millions.
+
+rob_by_genre_in_M &lt;- rob_by_genre %&gt;%
+  mutate(gross_mean = format(round(gross_mean / 1e6, 1), trim = TRUE), # Convert into millions
+         budget_mean = format(round(budget_mean / 1e6, 1), trim = TRUE)) # Convert into millions
+
+# Show results in Millions
+kable(rob_by_genre_in_M)</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th align="left">genre</th>
+<th align="left">gross_mean</th>
+<th align="left">budget_mean</th>
+<th align="right">return_on_budget</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">Horror</td>
+<td align="left">37.8</td>
+<td align="left">13.8</td>
+<td align="right">86.1493</td>
+</tr>
+<tr class="even">
+<td align="left">Biography</td>
+<td align="left">45.2</td>
+<td align="left">28.5</td>
+<td align="right">22.2806</td>
+</tr>
+<tr class="odd">
+<td align="left">Musical</td>
+<td align="left">92.1</td>
+<td align="left">3.2</td>
+<td align="right">18.8178</td>
+</tr>
+<tr class="even">
+<td align="left">Family</td>
+<td align="left">149.2</td>
+<td align="left">14.8</td>
+<td align="right">14.0765</td>
+</tr>
+<tr class="odd">
+<td align="left">Documentary</td>
+<td align="left">17.4</td>
+<td align="left">5.9</td>
+<td align="right">8.6986</td>
+</tr>
+<tr class="even">
+<td align="left">Western</td>
+<td align="left">20.8</td>
+<td align="left">3.5</td>
+<td align="right">7.0628</td>
+</tr>
+<tr class="odd">
+<td align="left">Fantasy</td>
+<td align="left">41.9</td>
+<td align="left">18.5</td>
+<td align="right">6.0984</td>
+</tr>
+<tr class="even">
+<td align="left">Animation</td>
+<td align="left">98.4</td>
+<td align="left">61.7</td>
+<td align="right">5.0091</td>
+</tr>
+<tr class="odd">
+<td align="left">Comedy</td>
+<td align="left">42.5</td>
+<td align="left">24.5</td>
+<td align="right">3.7009</td>
+</tr>
+<tr class="even">
+<td align="left">Romance</td>
+<td align="left">31.3</td>
+<td align="left">25.1</td>
+<td align="right">3.1681</td>
+</tr>
+<tr class="odd">
+<td align="left">Drama</td>
+<td align="left">36.8</td>
+<td align="left">25.8</td>
+<td align="right">2.9773</td>
+</tr>
+<tr class="even">
+<td align="left">Mystery</td>
+<td align="left">69.1</td>
+<td align="left">41.5</td>
+<td align="right">2.9037</td>
+</tr>
+<tr class="odd">
+<td align="left">Adventure</td>
+<td align="left">94.4</td>
+<td align="left">64.7</td>
+<td align="right">2.4402</td>
+</tr>
+<tr class="even">
+<td align="left">Crime</td>
+<td align="left">37.6</td>
+<td align="left">26.5</td>
+<td align="right">2.1922</td>
+</tr>
+<tr class="odd">
+<td align="left">Action</td>
+<td align="left">86.3</td>
+<td align="left">70.8</td>
+<td align="right">1.9261</td>
+</tr>
+<tr class="even">
+<td align="left">Sci-Fi</td>
+<td align="left">29.8</td>
+<td align="left">27.6</td>
+<td align="right">1.5804</td>
+</tr>
+<tr class="odd">
+<td align="left">Thriller</td>
+<td align="left">0.0</td>
+<td align="left">0.3</td>
+<td align="right">0.0082</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="are-directors-profitable-enough" class="section level3">
+<h3>Are directors profitable enough?</h3>
+<p>To find out, let’s produce a table that shows the top 15 directors who have created the highest gross revenue in the box office.</p>
+<p>We will add summary statistics as well to make it look more interesting.</p>
+<pre class="r"><code>top_15_directors &lt;- movies %&gt;% # save in object
+  group_by(director) %&gt;% # group by directors - rows will collapse
+  
+  # Calculate total, mean, median gross and sd
+  summarise(total = sum(gross),
+            mean = mean(gross),
+            median = median(gross),
+            sd = sd(gross)) %&gt;% 
+  arrange(desc(total)) %&gt;% # arrange in descending order
+  top_n(n=15, wt=total) # show top 15 values
+
+
+# Convert results into Millions
+
+top_15_in_M &lt;- top_15_directors %&gt;%
+  mutate(total = format(round(total / 1e6, 1), trim = TRUE), # Convert into millions and so on
+         mean = format(round(mean / 1e6, 1), trim = TRUE),
+         median = format(round(median / 1e6, 1), trim = TRUE),
+         sd = format(round(sd / 1e6, 1), trim = TRUE))
+
+# Result represented in Millions
+kable(top_15_in_M)</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th align="left">director</th>
+<th align="left">total</th>
+<th align="left">mean</th>
+<th align="left">median</th>
+<th align="left">sd</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">Steven Spielberg</td>
+<td align="left">4014</td>
+<td align="left">174.5</td>
+<td align="left">164.4</td>
+<td align="left">101.4</td>
+</tr>
+<tr class="even">
+<td align="left">Michael Bay</td>
+<td align="left">2195</td>
+<td align="left">183.0</td>
+<td align="left">168.5</td>
+<td align="left">125.8</td>
+</tr>
+<tr class="odd">
+<td align="left">James Cameron</td>
+<td align="left">1910</td>
+<td align="left">318.3</td>
+<td align="left">175.6</td>
+<td align="left">309.2</td>
+</tr>
+<tr class="even">
+<td align="left">Christopher Nolan</td>
+<td align="left">1813</td>
+<td align="left">226.7</td>
+<td align="left">196.7</td>
+<td align="left">187.2</td>
+</tr>
+<tr class="odd">
+<td align="left">George Lucas</td>
+<td align="left">1741</td>
+<td align="left">348.3</td>
+<td align="left">380.3</td>
+<td align="left">146.2</td>
+</tr>
+<tr class="even">
+<td align="left">Robert Zemeckis</td>
+<td align="left">1619</td>
+<td align="left">124.6</td>
+<td align="left">100.9</td>
+<td align="left">91.3</td>
+</tr>
+<tr class="odd">
+<td align="left">Tim Burton</td>
+<td align="left">1557</td>
+<td align="left">111.2</td>
+<td align="left">69.8</td>
+<td align="left">99.3</td>
+</tr>
+<tr class="even">
+<td align="left">Sam Raimi</td>
+<td align="left">1443</td>
+<td align="left">180.4</td>
+<td align="left">138.5</td>
+<td align="left">174.7</td>
+</tr>
+<tr class="odd">
+<td align="left">Clint Eastwood</td>
+<td align="left">1378</td>
+<td align="left">72.5</td>
+<td align="left">46.7</td>
+<td align="left">75.5</td>
+</tr>
+<tr class="even">
+<td align="left">Francis Lawrence</td>
+<td align="left">1358</td>
+<td align="left">271.7</td>
+<td align="left">281.7</td>
+<td align="left">135.4</td>
+</tr>
+<tr class="odd">
+<td align="left">Ron Howard</td>
+<td align="left">1336</td>
+<td align="left">111.3</td>
+<td align="left">101.6</td>
+<td align="left">81.9</td>
+</tr>
+<tr class="even">
+<td align="left">Gore Verbinski</td>
+<td align="left">1330</td>
+<td align="left">189.9</td>
+<td align="left">123.2</td>
+<td align="left">154.5</td>
+</tr>
+<tr class="odd">
+<td align="left">Andrew Adamson</td>
+<td align="left">1137</td>
+<td align="left">284.4</td>
+<td align="left">279.7</td>
+<td align="left">120.9</td>
+</tr>
+<tr class="even">
+<td align="left">Shawn Levy</td>
+<td align="left">1130</td>
+<td align="left">102.7</td>
+<td align="left">85.5</td>
+<td align="left">65.5</td>
+</tr>
+<tr class="odd">
+<td align="left">Ridley Scott</td>
+<td align="left">1129</td>
+<td align="left">80.6</td>
+<td align="left">47.8</td>
+<td align="left">68.8</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="ratings-by-genre" class="section level3">
+<h3>Ratings by genre</h3>
+<p>We will produce a table that describes how ratings are distributed by genre and add a page describing the dataset.</p>
+<pre class="r"><code># Create data frame with genre as categorical variable and the mean, min, max, median and SD as numerical variables.
+# We use the first data frame with results in their original format
+
+genre_distribution &lt;- movies %&gt;%
+  group_by(genre) %&gt;%
+  
+  # Calculate mean, min, max median and sd
+  summarise(rating_mean = mean(rating),
+            rating_min = min(rating),
+            rating_max = max(rating),
+            rating_median = median(rating),
+            rating_sd = sd(rating))
+
+# Print table with histograms
+skim(genre_distribution)</code></pre>
+<table>
+<caption>(#tab:genre_distribution)Data summary</caption>
+<tbody>
+<tr class="odd">
+<td align="left">Name</td>
+<td align="left">genre_distribution</td>
+</tr>
+<tr class="even">
+<td align="left">Number of rows</td>
+<td align="left">17</td>
+</tr>
+<tr class="odd">
+<td align="left">Number of columns</td>
+<td align="left">6</td>
+</tr>
+<tr class="even">
+<td align="left">_______________________</td>
+<td align="left"></td>
+</tr>
+<tr class="odd">
+<td align="left">Column type frequency:</td>
+<td align="left"></td>
+</tr>
+<tr class="even">
+<td align="left">character</td>
+<td align="left">1</td>
+</tr>
+<tr class="odd">
+<td align="left">numeric</td>
+<td align="left">5</td>
+</tr>
+<tr class="even">
+<td align="left">________________________</td>
+<td align="left"></td>
+</tr>
+<tr class="odd">
+<td align="left">Group variables</td>
+<td align="left">None</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Variable type: character</strong></p>
+<table>
+<thead>
+<tr class="header">
+<th align="left">skim_variable</th>
+<th align="right">n_missing</th>
+<th align="right">complete_rate</th>
+<th align="right">min</th>
+<th align="right">max</th>
+<th align="right">empty</th>
+<th align="right">n_unique</th>
+<th align="right">whitespace</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">genre</td>
+<td align="right">0</td>
+<td align="right">1</td>
+<td align="right">5</td>
+<td align="right">11</td>
+<td align="right">0</td>
+<td align="right">17</td>
+<td align="right">0</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Variable type: numeric</strong></p>
+<table>
+<thead>
+<tr class="header">
+<th align="left">skim_variable</th>
+<th align="right">n_missing</th>
+<th align="right">complete_rate</th>
+<th align="right">mean</th>
+<th align="right">sd</th>
+<th align="right">p0</th>
+<th align="right">p25</th>
+<th align="right">p50</th>
+<th align="right">p75</th>
+<th align="right">p100</th>
+<th align="left">hist</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">rating_mean</td>
+<td align="right">0</td>
+<td align="right">1.00</td>
+<td align="right">6.39</td>
+<td align="right">0.57</td>
+<td align="right">4.80</td>
+<td align="right">6.11</td>
+<td align="right">6.65</td>
+<td align="right">6.74</td>
+<td align="right">7.11</td>
+<td align="left">▁▁▃▃▇</td>
+</tr>
+<tr class="even">
+<td align="left">rating_min</td>
+<td align="right">0</td>
+<td align="right">1.00</td>
+<td align="right">4.02</td>
+<td align="right">1.51</td>
+<td align="right">1.60</td>
+<td align="right">2.30</td>
+<td align="right">4.50</td>
+<td align="right">4.80</td>
+<td align="right">6.30</td>
+<td align="left">▇▁▃▇▃</td>
+</tr>
+<tr class="odd">
+<td align="left">rating_max</td>
+<td align="right">0</td>
+<td align="right">1.00</td>
+<td align="right">8.08</td>
+<td align="right">1.06</td>
+<td align="right">4.80</td>
+<td align="right">7.90</td>
+<td align="right">8.50</td>
+<td align="right">8.80</td>
+<td align="right">9.30</td>
+<td align="left">▁▁▂▃▇</td>
+</tr>
+<tr class="even">
+<td align="left">rating_median</td>
+<td align="right">0</td>
+<td align="right">1.00</td>
+<td align="right">6.43</td>
+<td align="right">0.63</td>
+<td align="right">4.80</td>
+<td align="right">6.20</td>
+<td align="right">6.60</td>
+<td align="right">6.80</td>
+<td align="right">7.40</td>
+<td align="left">▁▁▇▇▅</td>
+</tr>
+<tr class="odd">
+<td align="left">rating_sd</td>
+<td align="right">1</td>
+<td align="right">0.94</td>
+<td align="right">1.07</td>
+<td align="right">0.41</td>
+<td align="right">0.64</td>
+<td align="right">0.90</td>
+<td align="right">0.98</td>
+<td align="right">1.10</td>
+<td align="right">2.26</td>
+<td align="left">▇▇▁▁▁</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div id="plotting-results" class="section level2">
+<h2>Plotting results</h2>
+<div id="facebook-likes-and-gross-profit" class="section level3">
+<h3>Facebook Likes and Gross Profit</h3>
+<p><strong>Can facebook users predict the gross profit of movies?</strong></p>
+<p>We will produce a scatterplot analysing the number of <code>cast_facebook_likes</code> received and the <code>gross_profit</code> generated. <em>Is there a positive correlation between these?</em></p>
+<pre class="r"><code>gross_fblikes &lt;- ggplot(movies, aes(x = cast_facebook_likes,
+                   y = gross,
+                   colour = genre)) +
+  
+  geom_point(alpha = 0.6) +
+  geom_smooth(col = &#39;black&#39;) + #create a line
+  scale_x_log10() +  # Use the log scale since data is crowded along the X axis
+  scale_y_log10() +  # Use the log scale since data is crowded along the Y axis
+  
+  # Add labels
+  labs(title = &quot;Relationship between gross profit and cast facebook likes&quot;,
+       color = &quot;Genre&quot;,
+       caption = &#39;Source: Kaggle IMDB 5000 movie dataset&#39;) +
+  xlab(&quot;The number of facebook likes cast members received&quot;) +
+  ylab(&quot;The gross earnings in the US box office&quot;)
+
+
+plot(gross_fblikes)</code></pre>
+<p><img src="/blogs/blog7_files/figure-html/gross_fblikes-1.png" width="648" style="display: block; margin: auto;" />
+X axis should be the number of <code>cast_facebook_likes</code> and Y axis should be the <code>gross_profit</code>.</p>
+<p>The data suggests a positive correlation between <code>gross profits</code> and number of <code>facebook likes</code>. The problem is that the data <strong>very centered</strong> around the middle (specific range of likes). This does not allow us to draw any certain conclusions because data on the edges seem to be insufficient.</p>
+</div>
+<div id="budget-and-gross-profit" class="section level3">
+<h3>Budget and Gross Profit</h3>
+<p>Let’s delve further into this. We will now analyse the relationship between <code>gross</code> and <code>budget</code> producing a scatterplot.</p>
+<pre class="r"><code>gross_on_budget &lt;- ggplot(movies, aes(x = budget,
+                   y = gross,
+                   color = genre)) +
+  
+  geom_point(alpha = 0.7) +
+
+  scale_x_log10() +  #Use the log scale since data is crowded along the X axis
+  scale_y_log10() +
+  geom_quantile(quantiles = 0.5) +
+  
+  # Add labels
+  labs(title = &quot;Relationship between gross profit and budget of the movies&quot;,
+       caption = &#39;Source: Kaggle IMDB 5000 movie dataset&#39;) +
+  xlab(&quot;Budget of the movies&quot;) +
+  ylab(&quot;The gross earnings in the US box office&quot;)
+
+
+plot(gross_on_budget)</code></pre>
+<p><img src="/blogs/blog7_files/figure-html/gross_on_budget-1.png" width="648" style="display: block; margin: auto;" /></p>
+<p>It can be appreciated that there is a positive correlation between the <code>budget</code> invested in movies and the <code>gross profits</code> in the US box office. Most points concentrate on the top right of the plot, thereby establishing a positive correlation. This is to be expected in most cases - <strong>otherwise film business would have ended years ago.</strong></p>
+<p>There can also be interesting <code>outliers</code> that generate a lot of profits with not much budget.</p>
+</div>
+<div id="imdb-ratings-and-gross-profit" class="section level3">
+<h3>iMDB Ratings and Gross Profit</h3>
+<p>We will examine the relationship between <code>gross</code> and <code>rating</code>. Let’s produce a scatterplot faceted by <code>genre</code>.</p>
+<pre class="r"><code>gross_on_rating &lt;- ggplot(movies, aes(rating,
+                   gross,
+                   color = rating)) +
+  geom_point(alpha = 0.8)  +
+  scale_x_log10() +
+  scale_y_log10() +
+  labs(title = &quot;Relationship between gross profit and iMDB rating&quot;,
+       caption = &#39;Source: Kaggle IMDB 5000 movie dataset&#39;) +
+  xlab(&quot;iMDB Rating&quot;) +
+  ylab(&quot;Gross profit&quot;) +
+  facet_wrap(~genre)
+
+plot(gross_on_rating)</code></pre>
+<p><img src="/blogs/blog7_files/figure-html/gross_on_rating-1.png" width="648" style="display: block; margin: auto;" /></p>
+<p>For <code>action</code>, <code>adventure</code> and <code>comedy</code> categories there is a very large concentration of points in the upper right corner, indicating that there may be a positive interdependence between high ratings and gross profit. We may not see a very clear trend for other categories: even though <code>drama</code> and <code>crime</code> have high ratings, the <code>gross profit</code> line is vertical, so some very high-rated movies resulted in low level of profits. Conversely, <code>Horror</code> and <code>Fantasy</code> movies brought very high profits for most of the movies rated positively.</p>
+<p>However, in other genres such as <code>family</code>, <code>musical</code>, <code>romance</code>, <code>Sci-Fi</code>, <code>thriller</code> and <code>western</code>, there is a scarcity of data that does not allow us to come to insightful conclusions. There is no indicator that these sort of genres will generate less revenue than those genres for which the data is abundant.</p>
+</div>
+</div>
+</div>
+
+                        </div>
+                    </section>
+            <!-- Disqus Inject -->
+                
+            </div>
+            
+        <!-- Footer -->
+            
+                <!-- Footer -->
+    <footer id="footer">
+        <div class="inner">
+            <ul class="icons">
+                
+                    <li><a href="" class="icon alt " target="_blank"><span class="label"></span></a></li>
+                
+                    <li><a href="https://github.com/Xinyu-yu-0321" class="icon alt fa-github" target="_blank"><span class="label">GitHub</span></a></li>
+                
+                    <li><a href="https://www.linkedin.com/in/xinyu-yu-833184175/" class="icon alt fa-linkedin" target="_blank"><span class="label">LinkedIn</span></a></li>
+                
+            </ul>
+            <ul class="copyright">
+                <li>&copy; London Business School</li>
+                
+                <li>Design:  <a href="https://www.html5up.net">HTML5 UP</a></li>
+                
+            </ul>
+        </div>
+    </footer>
+
+            
+        </div>
+
+    <!-- Scripts -->
+        <!-- Scripts -->
+    <!-- jQuery -->
+    <script src="/js/jquery.min.js"></script>
+    <script src="/js/jquery.scrolly.min.js"></script>
+    <script src="/js/jquery.scrollex.min.js"></script>
+    <script src="/js/skel.min.js"></script>
+    <script src="/js/util.js"></script>
+
+    
+
+    <!-- Main JS -->
+    <script src="/js/main.js"></script>
+
+    
+
+    
+
+    </body>
+</html>

@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Lifestyle on Portfolio website for Xinyu Yu</title>
+    <link>/blogs/</link>
+    <description>Recent content in Lifestyle on Portfolio website for Xinyu Yu</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Tue, 31 Oct 2017 22:27:21 -0500</lastBuildDate>
+    
+	<atom:link href="/blogs/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>California Contributors</title>
+      <link>/blogs/blog8/</link>
+      <pubDate>Mon, 07 Sep 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/blogs/blog8/</guid>
+      <description>2016 California Contributors plots We will now reproduce the plot that shows the top ten cities in highest amounts raised in political contributions in California during the 2016 US Presidential election.
+knitr::include_graphics(here::here(&amp;quot;images&amp;quot;, &amp;quot;challenge2.png&amp;quot;), error = FALSE) Taking on Challenge 2 First, we read the two dataframes
+# vroom() used to read data because we are dealing with a large dataset CA_contributors_2016 &amp;lt;- vroom::vroom(here::here(&amp;quot;data&amp;quot;,&amp;quot;CA_contributors_2016.csv&amp;quot;)) zips_df &amp;lt;- vroom::vroom(here::here(&amp;quot;data&amp;quot;, &amp;quot;zip_code_database.csv&amp;quot;)) glimpse(CA_contributors_2016) ## Rows: 1,292,843 ## Columns: 4 ## $ cand_nm &amp;lt;chr&amp;gt; &amp;quot;Clinton, Hillary Rodham&amp;quot;, &amp;quot;Clinton, Hillary Rodha… ## $ contb_receipt_amt &amp;lt;dbl&amp;gt; 50.</description>
+    </item>
+    
+    <item>
+      <title>Mask Acceptance</title>
+      <link>/blogs/blog5/</link>
+      <pubDate>Mon, 07 Sep 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/blogs/blog5/</guid>
+      <description>NYT mask use Github source for data https://github.com/nytimes/covid-19-data/tree/master/mask-use
+ Getting the data #Source for data url &amp;lt;- &amp;quot;https://github.com/nytimes/covid-19-data/raw/master/mask-use/mask-use-by-county.csv&amp;quot; nyt_mask_survey &amp;lt;- read_csv(here::here(&amp;quot;data&amp;quot;, &amp;quot;nyt_mask_survey.csv&amp;quot;)) nyt_mask_survey &amp;lt;- nyt_mask_survey %&amp;gt;% clean_names() %&amp;gt;% mutate( mostly_yes= frequently+always, mostly_no = never+rarely, delta = mostly_yes-mostly_no ) glimpse(nyt_mask_survey) ## Rows: 3,142 ## Columns: 9 ## $ countyfp &amp;lt;chr&amp;gt; &amp;quot;01001&amp;quot;, &amp;quot;01003&amp;quot;, &amp;quot;01005&amp;quot;, &amp;quot;01007&amp;quot;, &amp;quot;01009&amp;quot;, &amp;quot;01011&amp;quot;, &amp;quot;01… ## $ never &amp;lt;dbl&amp;gt; 0.053, 0.083, 0.067, 0.020, 0.053, 0.031, 0.102, 0.152, 0… ## $ rarely &amp;lt;dbl&amp;gt; 0.</description>
+    </item>
+    
+    <item>
+      <title>Beer Drinking</title>
+      <link>/blogs/blog6/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>/blogs/blog6/</guid>
+      <description>Where Do People Drink The Most Beer, Wine And Spirits? Back in 2014, fivethiryeight.com published an article on alchohol consumption in different countries.
+We will use this dataset to analyse where do people drink the most beer, wine and spirits.
+Load data First we will load and analyse the dataset. We need to call the library “fivethirtyeight”
+library(fivethirtyeight) data(drinks) Let’s take a glimpse at it.
+glimpse(drinks) ## Rows: 193 ## Columns: 5 ## $ country &amp;lt;chr&amp;gt; &amp;quot;Afghanistan&amp;quot;, &amp;quot;Albania&amp;quot;, &amp;quot;Algeria&amp;quot;, &amp;quot;A… ## $ beer_servings &amp;lt;int&amp;gt; 0, 89, 25, 245, 217, 102, 193, 21, 261,… ## $ spirit_servings &amp;lt;int&amp;gt; 0, 132, 0, 138, 57, 128, 25, 179, 72, 7… ## $ wine_servings &amp;lt;int&amp;gt; 0, 54, 14, 312, 45, 45, 221, 11, 212, 1… ## $ total_litres_of_pure_alcohol &amp;lt;dbl&amp;gt; 0.</description>
+    </item>
+    
+    <item>
+      <title>Movies Analysis</title>
+      <link>/blogs/blog7/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>/blogs/blog7/</guid>
+      <description>Analysis of movies- IMDB dataset We will look at a subset sample of movies, taken from the Kaggle IMDB 5000 movie dataset
+# Save data set in variable &amp;quot;movies&amp;quot; movies &amp;lt;- read_csv(here::here(&amp;quot;data&amp;quot;, &amp;quot;movies.csv&amp;quot;)) # Take a look at the data frame glimpse(movies) ## Rows: 2,961 ## Columns: 11 ## $ title &amp;lt;chr&amp;gt; &amp;quot;Avatar&amp;quot;, &amp;quot;Titanic&amp;quot;, &amp;quot;Jurassic World&amp;quot;, &amp;quot;The Aven… ## $ genre &amp;lt;chr&amp;gt; &amp;quot;Action&amp;quot;, &amp;quot;Drama&amp;quot;, &amp;quot;Action&amp;quot;, &amp;quot;Action&amp;quot;, &amp;quot;Action&amp;quot;,… ## $ director &amp;lt;chr&amp;gt; &amp;quot;James Cameron&amp;quot;, &amp;quot;James Cameron&amp;quot;, &amp;quot;Colin Trevorr… ## $ year &amp;lt;dbl&amp;gt; 2009, 1997, 2015, 2012, 2008, 1999, 1977, 2015, … ## $ duration &amp;lt;dbl&amp;gt; 178, 194, 124, 173, 152, 136, 125, 141, 164, 93,… ## $ gross &amp;lt;dbl&amp;gt; 760505847, 658672302, 652177271, 623279547, 5333… ## $ budget &amp;lt;dbl&amp;gt; 237000000, 200000000, 150000000, 220000000, 1850… ## $ cast_facebook_likes &amp;lt;dbl&amp;gt; 4834, 45223, 8458, 87697, 57802, 37723, 13485, 9… ## $ votes &amp;lt;dbl&amp;gt; 886204, 793059, 418214, 995415, 1676169, 534658,… ## $ reviews &amp;lt;dbl&amp;gt; 3777, 2843, 1934, 2425, 5312, 3917, 1752, 1752, … ## $ rating &amp;lt;dbl&amp;gt; 7.</description>
+    </item>
+    
+  </channel>
+</rss>
