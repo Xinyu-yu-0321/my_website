@@ -1,0 +1,175 @@
+---
+categories:
+- ""
+- ""
+date: "2020-09-07"
+description: The top ten cities in highest amounts raised in political contributions in California during the 2016 US Presidential election
+draft: false
+image: PE2016.jpg
+keywords: ""
+slug: blog8
+title: California Contributors
+---
+
+
+
+<div id="california-contributors-plots" class="section level1">
+<h1>2016 California Contributors plots</h1>
+<p>We will now reproduce the plot that shows the top ten cities in highest amounts raised in political contributions in California during the 2016 US Presidential election.</p>
+<pre class="r"><code>knitr::include_graphics(here::here(&quot;images&quot;, &quot;challenge2.png&quot;), error = FALSE)</code></pre>
+<p><img src="/Users/xinyuyu/Desktop/my_website/images/challenge2.png" width="100%" style="display: block; margin: auto;" /></p>
+<div id="taking-on-challenge-2" class="section level2">
+<h2>Taking on Challenge 2</h2>
+<p>First, we read the two dataframes</p>
+<pre class="r"><code># vroom() used to read data because we are dealing with a large dataset
+CA_contributors_2016 &lt;- vroom::vroom(here::here(&quot;data&quot;,&quot;CA_contributors_2016.csv&quot;))
+zips_df &lt;- vroom::vroom(here::here(&quot;data&quot;, &quot;zip_code_database.csv&quot;))
+glimpse(CA_contributors_2016)</code></pre>
+<pre><code>## Rows: 1,292,843
+## Columns: 4
+## $ cand_nm           &lt;chr&gt; &quot;Clinton, Hillary Rodham&quot;, &quot;Clinton, Hillary Rodha…
+## $ contb_receipt_amt &lt;dbl&gt; 50.00, 200.00, 5.00, 48.33, 40.00, 244.34, 35.00, …
+## $ zip               &lt;dbl&gt; 94939, 93428, 92337, 95334, 93011, 95826, 90278, 9…
+## $ contb_date        &lt;date&gt; 2016-04-26, 2016-04-20, 2016-04-02, 2016-11-21, 2…</code></pre>
+<pre class="r"><code>glimpse(zips_df)</code></pre>
+<pre><code>## Rows: 42,522
+## Columns: 16
+## $ zip                  &lt;chr&gt; &quot;00501&quot;, &quot;00544&quot;, &quot;00601&quot;, &quot;00602&quot;, &quot;00603&quot;, &quot;0…
+## $ type                 &lt;chr&gt; &quot;UNIQUE&quot;, &quot;UNIQUE&quot;, &quot;STANDARD&quot;, &quot;STANDARD&quot;, &quot;ST…
+## $ primary_city         &lt;chr&gt; &quot;Holtsville&quot;, &quot;Holtsville&quot;, &quot;Adjuntas&quot;, &quot;Aguada…
+## $ acceptable_cities    &lt;chr&gt; NA, NA, NA, NA, &quot;Ramey&quot;, &quot;Ramey&quot;, NA, NA, NA, N…
+## $ unacceptable_cities  &lt;chr&gt; &quot;I R S Service Center&quot;, &quot;Irs Service Center&quot;, &quot;…
+## $ state                &lt;chr&gt; &quot;NY&quot;, &quot;NY&quot;, &quot;PR&quot;, &quot;PR&quot;, &quot;PR&quot;, &quot;PR&quot;, &quot;PR&quot;, &quot;PR&quot;,…
+## $ county               &lt;chr&gt; &quot;Suffolk County&quot;, &quot;Suffolk County&quot;, &quot;Adjuntas&quot;,…
+## $ timezone             &lt;chr&gt; &quot;America/New_York&quot;, &quot;America/New_York&quot;, &quot;Americ…
+## $ area_codes           &lt;dbl&gt; 631, 631, 787939, 787, 787, NA, NA, 787939, 787…
+## $ latitude             &lt;dbl&gt; 40.81, 40.81, 18.16, 18.38, 18.43, 18.43, 18.43…
+## $ longitude            &lt;dbl&gt; -73.04, -73.04, -66.72, -67.18, -67.15, -67.15,…
+## $ world_region         &lt;chr&gt; NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA,…
+## $ country              &lt;chr&gt; &quot;US&quot;, &quot;US&quot;, &quot;US&quot;, &quot;US&quot;, &quot;US&quot;, &quot;US&quot;, &quot;US&quot;, &quot;US&quot;,…
+## $ decommissioned       &lt;dbl&gt; 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,…
+## $ estimated_population &lt;dbl&gt; 384, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, …
+## $ notes                &lt;chr&gt; NA, NA, NA, NA, NA, NA, NA, NA, NA, &quot;no NWS dat…</code></pre>
+<div id="data-wranlging" class="section level3">
+<h3>Data Wranlging</h3>
+<p>Only the zip codes of California are required. Specifically, we want to know the primary cities corresponding to the zips</p>
+<pre class="r"><code>zips_CA &lt;- zips_df %&gt;%
+  filter(state == &quot;CA&quot;) %&gt;%  #filter for CA
+  select(zip, primary_city) #retain only zips and primary city
+glimpse(zips_CA)</code></pre>
+<pre><code>## Rows: 2,653
+## Columns: 2
+## $ zip          &lt;chr&gt; &quot;90001&quot;, &quot;90002&quot;, &quot;90003&quot;, &quot;90004&quot;, &quot;90005&quot;, &quot;90006&quot;, &quot;…
+## $ primary_city &lt;chr&gt; &quot;Los Angeles&quot;, &quot;Los Angeles&quot;, &quot;Los Angeles&quot;, &quot;Los Angel…</code></pre>
+<p>Since we do want to see which city does each zip correspond to, we need to join the two dataframes. Then, we group the output table on candidates names, and on cities. After this, we compute the sum of contributions and filter on the respective candidates.</p>
+<pre class="r"><code>zips_num&lt;- mutate(zips_CA, zip = as.numeric(zip)) #convert strings to numerical values so their type matches up with CA_contributers_2016 dataset
+df &lt;- inner_join(CA_contributors_2016, zips_num, copy = FALSE) %&gt;% #join two dataframes
+  group_by(cand_nm, primary_city) %&gt;%
+  summarise(total_contb = sum(contb_receipt_amt)) %&gt;%
+  filter(cand_nm %in% c(&quot;Clinton, Hillary Rodham&quot;, &quot;Trump, Donald J.&quot;)) %&gt;% #filter on these 2 candidates (but more candidates can be chosen)
+  arrange(desc(total_contb)) 
+# Show first 10 results
+kable(head(df, 10))</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th align="left">cand_nm</th>
+<th align="left">primary_city</th>
+<th align="right">total_contb</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">Clinton, Hillary Rodham</td>
+<td align="left">San Francisco</td>
+<td align="right">12345963</td>
+</tr>
+<tr class="even">
+<td align="left">Clinton, Hillary Rodham</td>
+<td align="left">Los Angeles</td>
+<td align="right">12022399</td>
+</tr>
+<tr class="odd">
+<td align="left">Clinton, Hillary Rodham</td>
+<td align="left">Oakland</td>
+<td align="right">2955387</td>
+</tr>
+<tr class="even">
+<td align="left">Clinton, Hillary Rodham</td>
+<td align="left">Palo Alto</td>
+<td align="right">2664346</td>
+</tr>
+<tr class="odd">
+<td align="left">Clinton, Hillary Rodham</td>
+<td align="left">Berkeley</td>
+<td align="right">2300980</td>
+</tr>
+<tr class="even">
+<td align="left">Clinton, Hillary Rodham</td>
+<td align="left">Beverly Hills</td>
+<td align="right">2226442</td>
+</tr>
+<tr class="odd">
+<td align="left">Clinton, Hillary Rodham</td>
+<td align="left">Santa Monica</td>
+<td align="right">2134503</td>
+</tr>
+<tr class="even">
+<td align="left">Clinton, Hillary Rodham</td>
+<td align="left">San Diego</td>
+<td align="right">2094960</td>
+</tr>
+<tr class="odd">
+<td align="left">Clinton, Hillary Rodham</td>
+<td align="left">Sacramento</td>
+<td align="right">1623772</td>
+</tr>
+<tr class="even">
+<td align="left">Clinton, Hillary Rodham</td>
+<td align="left">Los Altos</td>
+<td align="right">1500963</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="plotting" class="section level3">
+<h3>Plotting</h3>
+<p>We chose the method that displays the same type of graph for multiple candidates. In this example, we filtered on just the 2 candidates (Hillary and Trump). If it would be desirable to analyse info of more than two candidates, the relevant ones can simply be added to the filter statement.</p>
+<pre class="r"><code>df %&gt;%
+    #select top 10 cities according to contributions for each candidate
+    group_by(cand_nm) %&gt;% 
+    top_n(10) %&gt;%
+    ungroup %&gt;%
+    
+    #reorder primary cities by total_contb, within the cand_nm category
+    mutate(primary_city = reorder_within(primary_city, total_contb, cand_nm)) %&gt;%
+    
+  
+    #produce plot
+    ggplot(aes(primary_city, total_contb, fill = cand_nm)) +
+  
+    #bar plot
+    geom_col(show.legend = FALSE) +
+    
+    #create facet plots
+    facet_wrap(~cand_nm, scales = &quot;free&quot;) + #the second argument allows the x and y scales to vary across panels
+    coord_flip() + # to reverse the barplot
+    scale_x_reordered() +
+    scale_y_continuous(expand = expansion(mult = .05), #add white margin around bars
+                       labels=scales::dollar_format(), #add dolar to x scale numbers
+                       breaks = breaks_extended(n=4) ) + #uses breaks to display fewer numbers on the x scale 
+    
+    #aesthetics
+    scale_fill_manual(values = c(&quot;#2E74C0&quot;, &quot;#CB454A&quot;)) + #add the exact same colours
+    theme_bw() + #add black frame
+    theme(aspect.ratio = 1/1.1) + # to adjust the length and width ratio of the table 
+    labs(y = &quot;Amount raised&quot;,
+         x = NULL,
+         title = &quot;Where did candidates raise most money?&quot;) +
+    theme(title = element_text(size=7), #adjust font size
+          axis.text=element_text(size=7),
+          axis.title=element_text(size=7))</code></pre>
+<p><img src="/blogs/blog8_files/figure-html/unnamed-chunk-3-1.png" width="648" style="display: block; margin: auto;" /></p>
+</div>
+</div>
+</div>

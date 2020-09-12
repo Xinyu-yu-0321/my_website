@@ -1,0 +1,241 @@
+---
+categories:
+- ""
+- ""
+date: "2020-09-7"
+description: Where Do People Drink The Most Beer, Wine And Spirits?
+draft: false
+image: beer.jpg
+keywords: ""
+slug: blog6
+title: Beer Drinking
+---
+
+
+
+<div id="where-do-people-drink-the-most-beer-wine-and-spirits" class="section level1">
+<h1>Where Do People Drink The Most Beer, Wine And Spirits?</h1>
+<p>Back in 2014, <a href="https://fivethirtyeight.com/features/dear-mona-followup-where-do-people-drink-the-most-beer-wine-and-spirits/">fivethiryeight.com</a> published an article on alchohol consumption in different countries.</p>
+<p>We will use this dataset to analyse where do people drink the most beer, wine and spirits.</p>
+<div id="load-data" class="section level2">
+<h2>Load data</h2>
+<p>First we will load and analyse the dataset. We need to call the library “fivethirtyeight”</p>
+<pre class="r"><code>library(fivethirtyeight)
+data(drinks)</code></pre>
+<p>Let’s take a glimpse at it.</p>
+<pre class="r"><code>glimpse(drinks)</code></pre>
+<pre><code>## Rows: 193
+## Columns: 5
+## $ country                      &lt;chr&gt; &quot;Afghanistan&quot;, &quot;Albania&quot;, &quot;Algeria&quot;, &quot;A…
+## $ beer_servings                &lt;int&gt; 0, 89, 25, 245, 217, 102, 193, 21, 261,…
+## $ spirit_servings              &lt;int&gt; 0, 132, 0, 138, 57, 128, 25, 179, 72, 7…
+## $ wine_servings                &lt;int&gt; 0, 54, 14, 312, 45, 45, 221, 11, 212, 1…
+## $ total_litres_of_pure_alcohol &lt;dbl&gt; 0.0, 4.9, 0.7, 12.4, 5.9, 4.9, 8.3, 3.8…</code></pre>
+<p>It seems that for some countries the data is zero/NA. This is likely due to legal regulations in those specific countries - data is not available. We will proceed to analyse without these.</p>
+</div>
+<div id="data-wrangling-and-plotting" class="section level2">
+<h2>Data Wrangling and Plotting</h2>
+<p>We will now continue to wrangle the data so as to plot it in a conventional way.</p>
+<pre class="r"><code>#  First we will build the data frame using dplyr and then will plot using ggplot.
+
+top_beer_25 &lt;- drinks %&gt;%  # save into object &quot;top_beer_25&quot;
+  arrange(desc(beer_servings)) %&gt;% # Sorting on descending order to get the highest values on top
+  top_n(n=25, wt=beer_servings) %&gt;% # Get the first 25 values
+  select(country, beer_servings) # Show only columns country and beer_savings
+
+# Show results 
+kable(top_beer_25)</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th align="left">country</th>
+<th align="right">beer_servings</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">Namibia</td>
+<td align="right">376</td>
+</tr>
+<tr class="even">
+<td align="left">Czech Republic</td>
+<td align="right">361</td>
+</tr>
+<tr class="odd">
+<td align="left">Gabon</td>
+<td align="right">347</td>
+</tr>
+<tr class="even">
+<td align="left">Germany</td>
+<td align="right">346</td>
+</tr>
+<tr class="odd">
+<td align="left">Lithuania</td>
+<td align="right">343</td>
+</tr>
+<tr class="even">
+<td align="left">Poland</td>
+<td align="right">343</td>
+</tr>
+<tr class="odd">
+<td align="left">Venezuela</td>
+<td align="right">333</td>
+</tr>
+<tr class="even">
+<td align="left">Ireland</td>
+<td align="right">313</td>
+</tr>
+<tr class="odd">
+<td align="left">Palau</td>
+<td align="right">306</td>
+</tr>
+<tr class="even">
+<td align="left">Romania</td>
+<td align="right">297</td>
+</tr>
+<tr class="odd">
+<td align="left">Belgium</td>
+<td align="right">295</td>
+</tr>
+<tr class="even">
+<td align="left">Panama</td>
+<td align="right">285</td>
+</tr>
+<tr class="odd">
+<td align="left">Spain</td>
+<td align="right">284</td>
+</tr>
+<tr class="even">
+<td align="left">Serbia</td>
+<td align="right">283</td>
+</tr>
+<tr class="odd">
+<td align="left">Latvia</td>
+<td align="right">281</td>
+</tr>
+<tr class="even">
+<td align="left">Austria</td>
+<td align="right">279</td>
+</tr>
+<tr class="odd">
+<td align="left">Slovenia</td>
+<td align="right">270</td>
+</tr>
+<tr class="even">
+<td align="left">Belize</td>
+<td align="right">263</td>
+</tr>
+<tr class="odd">
+<td align="left">Finland</td>
+<td align="right">263</td>
+</tr>
+<tr class="even">
+<td align="left">Australia</td>
+<td align="right">261</td>
+</tr>
+<tr class="odd">
+<td align="left">Netherlands</td>
+<td align="right">251</td>
+</tr>
+<tr class="even">
+<td align="left">USA</td>
+<td align="right">249</td>
+</tr>
+<tr class="odd">
+<td align="left">Russian Federation</td>
+<td align="right">247</td>
+</tr>
+<tr class="even">
+<td align="left">Andorra</td>
+<td align="right">245</td>
+</tr>
+<tr class="odd">
+<td align="left">Brazil</td>
+<td align="right">245</td>
+</tr>
+</tbody>
+</table>
+<p>Now let’s look at the plot</p>
+<pre class="r"><code># Use ggplot to map the data variables to aesthetic attributes of geometric objects. 
+
+
+
+ggplot(top_beer_25, aes(x=reorder(country, beer_servings), # reorder() in x-axis will provide the order established on the df
+                        y=beer_servings, 
+                        fill=beer_servings)) + 
+  geom_col() + # Since the data set is pre-counted, we use &quot;geom_col()&quot; for bar plots
+  theme_bw() + # Add black &amp; white theme
+  
+  scale_fill_gradient(low=&quot;#ffc692&quot;, # This function manually adds a gradient to the fill variable.
+                      high=&quot;#f28e1c&quot;) +  # The codes are the hex colour codes for beer
+  
+  labs(title = &quot;Top 25 beer consuming countries&quot;, # add labels to the df
+       subtitle = &quot;From highest to lower&quot;,
+       caption = &quot;Source: fivethirtyeight.com - 2014&quot;, # Source
+       fill = &quot;Beer Servings&quot; # Change legend name
+       ) +
+  
+  xlab(&quot;Countries&quot;) + # x-axis
+  ylab(&quot;Servings of beer in average sizes per person&quot;) + # y-axis
+  coord_flip() # flip bar plot in horizontal</code></pre>
+<p><img src="/blogs/blog6_files/figure-html/plot_25_beer-1.png" width="648" style="display: block; margin: auto;" /></p>
+<p>We will now do the same with wine and spirits. The following examples will follow the same workflow. The documentation here applies for those as well.</p>
+<pre class="r"><code># Build data frame
+top_wine_25 &lt;- drinks %&gt;% 
+  arrange(desc(wine_servings)) %&gt;% # Sorting on descending order to get the highest values on top
+  top_n(n=25, wt=wine_servings) %&gt;% # Get the first 25 values
+  select(country, wine_servings) # Show only columns country and beer_savings
+
+
+# Plot
+ggplot(top_wine_25, aes(x=reorder(country, wine_servings), 
+                        y=wine_servings, 
+                        fill=wine_servings)) +
+  geom_col() +
+  theme_bw() +
+  
+  scale_fill_gradient(low=&quot;#bb9394&quot;,
+                      high=&quot;#722f37&quot;) + # hex colour codes for wine
+  
+  labs(title = &quot;Top 25 wine consuming countries&quot;, 
+       subtitle = &quot;From highest to lower&quot;,
+       caption = &quot;Source: fivethirtyeight.com - 2014&quot;,
+       fill = &quot;Wine Servings&quot;
+       ) +
+  
+  xlab(&quot;Countries&quot;) + 
+  ylab(&quot;Servings of Wine in average sizes per person&quot;) +
+  coord_flip()</code></pre>
+<p><img src="/blogs/blog6_files/figure-html/wine_plot-1.png" width="648" style="display: block; margin: auto;" /></p>
+<pre class="r"><code># Build data frame
+top_spirit_25 &lt;- drinks %&gt;% 
+  arrange(desc(spirit_servings)) %&gt;% # Sorting on descending order to get the highest values on top
+  top_n(n=25, wt=spirit_servings) %&gt;% # Get the first 25 values
+  select(country, spirit_servings) # Show only columns country and beer_savings
+
+# Plot
+ggplot(top_spirit_25, aes(x=reorder(country, spirit_servings), 
+                          y=spirit_servings, 
+                          fill=spirit_servings)) +
+  geom_col() +
+  theme_bw() +
+  
+  scale_fill_gradient(low=&quot;#fca393&quot;,
+                      high=&quot;#e03c31&quot;) + # hex colour codes for spirit
+  
+  labs(title = &quot;Top 25 spirit consuming countries&quot;, 
+       subtitle = &quot;From highest to lower&quot;,
+       caption = &quot;Source: fivethirtyeight.com - 2014&quot;,
+       fill = &quot;Spirit Servings&quot;
+       ) +
+  
+  xlab(&quot;Countries&quot;) + 
+  ylab(&quot;Servings of spirit in average sizes per person&quot;) +
+  coord_flip()</code></pre>
+<p><img src="/blogs/blog6_files/figure-html/spirit_plot-1.png" width="648" style="display: block; margin: auto;" /></p>
+<p><strong>Where do they drink the most beer, wine and spirits?</strong></p>
+<p>In the previous plots, we can appreciate that countries that are producers of certain alcoholic beverages are also large consumers of that specific drink: France, Portugal and Argentina with wine; Germany and Ireland with beer; Grenada and Belarus with spirit.</p>
+<p>At the same time, we can identify a trend related to a specific drink in some continents: when it comes to wine, the top 10 is solely composed by European countries; when it comes to spirit, the top 10 composed by countries from Central America (known by their affinity with spirit drinks) and Eastern Europe.</p>
+<p>Beer, however, represents a more complicated case: it’s a mixture of countries from different continents and economic backgrounds. Given that beer is usually cheaper than the rest of other alcoholic beverages, it is often more consumed by people in countries with lower GDP. Because of this, we believe that the results are bound to vary a lot between countries and continents. Perhaps, information on the index price per country would be helpful to analyze this hypothesis.</p>
+</div>
+</div>
