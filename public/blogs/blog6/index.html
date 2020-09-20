@@ -79,11 +79,11 @@
 
 <div id="where-do-people-drink-the-most-beer-wine-and-spirits" class="section level1">
 <h1>Where Do People Drink The Most Beer, Wine And Spirits?</h1>
-<p>Back in 2014, <a href="https://fivethirtyeight.com/features/dear-mona-followup-where-do-people-drink-the-most-beer-wine-and-spirits/">fivethiryeight.com</a> published an article on alchohol consumption in different countries.</p>
-<p>We will use this dataset to analyse where do people drink the most beer, wine and spirits.</p>
+<p>Back in 2014, <a href="https://fivethirtyeight.com/features/dear-mona-followup-where-do-people-drink-the-most-beer-wine-and-spirits/">fivethiryeight.com</a> published an article on alcohol consumption in different countries.</p>
+<p>I will use this dataset to analyse where do people drink the most beer, wine and spirits.</p>
 <div id="load-data" class="section level2">
 <h2>Load data</h2>
-<p>First we will load and analyse the dataset. We need to call the library “fivethirtyeight”</p>
+<p>First I will load and analyse the dataset.</p>
 <pre class="r"><code>library(fivethirtyeight)
 data(drinks)</code></pre>
 <p>Let’s take a glimpse at it.</p>
@@ -99,7 +99,7 @@ data(drinks)</code></pre>
 </div>
 <div id="data-wrangling-and-plotting" class="section level2">
 <h2>Data Wrangling and Plotting</h2>
-<p>We will now continue to wrangle the data so as to plot it in a conventional way.</p>
+<p>I will now continue to wrangle the data so as to plot it in a conventional way.</p>
 <pre class="r"><code>#  First we will build the data frame using dplyr and then will plot using ggplot.
 
 top_beer_25 &lt;- drinks %&gt;%  # save into object &quot;top_beer_25&quot;
@@ -243,7 +243,7 @@ ggplot(top_beer_25, aes(x=reorder(country, beer_servings), # reorder() in x-axis
   ylab(&quot;Servings of beer in average sizes per person&quot;) + # y-axis
   coord_flip() # flip bar plot in horizontal</code></pre>
 <p><img src="/blogs/blog6_files/figure-html/plot_25_beer-1.png" width="648" style="display: block; margin: auto;" /></p>
-<p>We will now do the same with wine and spirits. The following examples will follow the same workflow. The documentation here applies for those as well.</p>
+<p>I will now do the same with wine and spirits. The following examples will follow the same workflow. The documentation here applies for those as well.</p>
 <pre class="r"><code># Build data frame
 top_wine_25 &lt;- drinks %&gt;% 
   arrange(desc(wine_servings)) %&gt;% # Sorting on descending order to get the highest values on top

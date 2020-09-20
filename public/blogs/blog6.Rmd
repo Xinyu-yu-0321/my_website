@@ -53,13 +53,13 @@ library(knitr)
 
 # Where Do People Drink The Most Beer, Wine And Spirits?
 
-Back in 2014, [fivethiryeight.com](https://fivethirtyeight.com/features/dear-mona-followup-where-do-people-drink-the-most-beer-wine-and-spirits/) published an article on alchohol consumption in different countries.
+Back in 2014, [fivethiryeight.com](https://fivethirtyeight.com/features/dear-mona-followup-where-do-people-drink-the-most-beer-wine-and-spirits/) published an article on alcohol consumption in different countries.
 
-We will use this dataset to analyse where do people drink the most beer, wine and spirits.
+I will use this dataset to analyse where do people drink the most beer, wine and spirits.
 
 ## Load data
 
-First we will load and analyse the dataset. We need to call the library "fivethirtyeight"
+First I will load and analyse the dataset.
 ```{r, load_alcohol_data}
 library(fivethirtyeight)
 data(drinks)
@@ -74,7 +74,7 @@ It seems that for some countries the data is zero/NA. This is likely due to lega
 
 ## Data Wrangling and Plotting
 
-We will now continue to wrangle the data so as to plot it in a conventional way.
+I will now continue to wrangle the data so as to plot it in a conventional way.
 ```{r top_beer_25, echo=TRUE}
 
 #  First we will build the data frame using dplyr and then will plot using ggplot.
@@ -116,7 +116,7 @@ ggplot(top_beer_25, aes(x=reorder(country, beer_servings), # reorder() in x-axis
 
 ```
 
-We will now do the same with wine and spirits. The following examples will follow the same workflow. The documentation here applies for those as well.
+I will now do the same with wine and spirits. The following examples will follow the same workflow. The documentation here applies for those as well.
 
 ```{r wine_plot, echo=TRUE}
 

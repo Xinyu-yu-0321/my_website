@@ -49,9 +49,9 @@ summary(cars) ## speed dist ## Min. : 4.0 Min. : 2.00 ## 1st Qu.:12.0 1st Qu.: 2
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       
       <guid>/blogs/blog6/</guid>
-      <description>Where Do People Drink The Most Beer, Wine And Spirits? Back in 2014, fivethiryeight.com published an article on alchohol consumption in different countries.
-We will use this dataset to analyse where do people drink the most beer, wine and spirits.
-Load data First we will load and analyse the dataset. We need to call the library “fivethirtyeight”
+      <description>Where Do People Drink The Most Beer, Wine And Spirits? Back in 2014, fivethiryeight.com published an article on alcohol consumption in different countries.
+I will use this dataset to analyse where do people drink the most beer, wine and spirits.
+Load data First I will load and analyse the dataset.
 library(fivethirtyeight) data(drinks) Let’s take a glimpse at it.
 glimpse(drinks) ## Rows: 193 ## Columns: 5 ## $ country &amp;lt;chr&amp;gt; &amp;quot;Afghanistan&amp;quot;, &amp;quot;Albania&amp;quot;, &amp;quot;Algeria&amp;quot;, &amp;quot;A… ## $ beer_servings &amp;lt;int&amp;gt; 0, 89, 25, 245, 217, 102, 193, 21, 261,… ## $ spirit_servings &amp;lt;int&amp;gt; 0, 132, 0, 138, 57, 128, 25, 179, 72, 7… ## $ wine_servings &amp;lt;int&amp;gt; 0, 54, 14, 312, 45, 45, 221, 11, 212, 1… ## $ total_litres_of_pure_alcohol &amp;lt;dbl&amp;gt; 0.</description>
     </item>
