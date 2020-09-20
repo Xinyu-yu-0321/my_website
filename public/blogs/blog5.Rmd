@@ -43,7 +43,7 @@ library(socviz)
 
 ## NYT mask use
 
-Github source for data https://github.com/nytimes/covid-19-data/tree/master/mask-use
+Does mask use acceptance have any relation with some demographics? To answer this question, first I would like to get the data from Github source https://github.com/nytimes/covid-19-data/tree/master/mask-use
 
 
 ## Getting the data 
@@ -68,7 +68,7 @@ glimpse(nyt_mask_survey)
 
 The FIPS code is a federal code that numbers states and territories of the US. It extends to the county level with an additional four digits, so every county in the US has a unique six-digit identifier, where the first two digits represent the state. 
 
-We will be using Kieran Healy's `socviz` package which among other things contains `county_map` and `county_data`  
+I will be using Kieran Healy's `socviz` package which among other things contains `county_map` and `county_data`  
 
 ```{r}
 # America’s choropleths; use county_map that has all polygons 
@@ -94,7 +94,7 @@ glimpse(county_map)
 
 ## Joing the files
 
-We have three files
+I have three files
 
 1. `nyt_mask_survey`, our NYT survey data, 
 1. `county_map` that has all polygons that define a county
@@ -152,7 +152,7 @@ p4 + labs(fill = "Mask acceptance, (Mostly Yes - Mostly No)",
 
 ## Checking for relationships
 
-Does mask use acceptance have any relation with some demographics? Let us explor the relationship between country household income, population, and % who voted republican in 2016
+Does mask use acceptance have any relation with some demographics? Let me explore the relationship between country household income, population, and % who voted republican in 2016
 
 ```{r, ggpairs, cache=TRUE}
 county_masks_full %>% 

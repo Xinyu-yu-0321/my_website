@@ -15,7 +15,7 @@ title: Mask Acceptance
 
 <div id="nyt-mask-use" class="section level2">
 <h2>NYT mask use</h2>
-<p>Github source for data <a href="https://github.com/nytimes/covid-19-data/tree/master/mask-use" class="uri">https://github.com/nytimes/covid-19-data/tree/master/mask-use</a></p>
+<p>Does mask use acceptance have any relation with some demographics? To answer this question, first I would like to get the data from Github source <a href="https://github.com/nytimes/covid-19-data/tree/master/mask-use" class="uri">https://github.com/nytimes/covid-19-data/tree/master/mask-use</a></p>
 </div>
 <div id="getting-the-data" class="section level2">
 <h2>Getting the data</h2>
@@ -47,50 +47,50 @@ glimpse(nyt_mask_survey)</code></pre>
 <div id="choropleth-map" class="section level2">
 <h2>Choropleth map</h2>
 <p>The FIPS code is a federal code that numbers states and territories of the US. It extends to the county level with an additional four digits, so every county in the US has a unique six-digit identifier, where the first two digits represent the state.</p>
-<p>We will be using Kieran Healy’s <code>socviz</code> package which among other things contains <code>county_map</code> and <code>county_data</code></p>
+<p>I will be using Kieran Healy’s <code>socviz</code> package which among other things contains <code>county_map</code> and <code>county_data</code></p>
 <pre class="r"><code># America’s choropleths; use county_map that has all polygons 
 # and county data with demographics/election data from socviz datafile
 # The id field is the FIPS code for the county
 county_map %&gt;% 
   sample_n(5)</code></pre>
-<pre><code>##       long      lat  order  hole piece             group    id
-## 1  -634017 -2140105   9312 FALSE     1  0500000US02130.1 02130
-## 2   276050    41455  90718 FALSE     1  0500000US27011.1 27011
-## 3   950076   256783  89111 FALSE     1  0500000US26103.1 26103
-## 4 -1990003 -2432981   5883 FALSE    10 0500000US02016.10 02016
-## 5   228776   -85369 148232 FALSE     1  0500000US46077.1 46077</code></pre>
+<pre><code>##       long      lat  order  hole piece            group    id
+## 1   564546  -529489 104578 FALSE     1 0500000US29211.1 29211
+## 2   755915 -1378262  73746 FALSE     1 0500000US22083.1 22083
+## 3   696655   218209 185300 FALSE     1 0500000US55003.1 55003
+## 4 -1489774 -2073827   6754 FALSE     1 0500000US02050.1 02050
+## 5  2018109  -791068 124372 FALSE     1 0500000US37107.1 37107</code></pre>
 <pre class="r"><code>county_data %&gt;%
     sample_n(5)</code></pre>
-<pre><code>##      id           name state census_region      pop_dens   pop_dens4
-## 1 51199    York County    VA         South [  500, 1000) [118,71672]
-## 2 51105     Lee County    VA         South [   50,  100) [ 45,  118)
-## 3 20051   Ellis County    KS       Midwest [   10,   50) [ 17,   45)
-## 4 28087 Lowndes County    MS         South [  100,  500) [118,71672]
-## 5 18103   Miami County    IN       Midwest [   50,  100) [ 45,  118)
-##     pop_dens6   pct_black   pop female white black travel_time land_area
-## 1 [215,71672] [10.0,15.0) 66342   50.8  77.3  13.3        21.5       105
-## 2 [ 45,   82) [ 2.0, 5.0) 24951   47.8  94.5   4.0        28.4       436
-## 3 [ 25,   45) [ 0.0, 2.0) 29013   49.7  95.6   1.0        13.1       900
-## 4 [ 82,  215) [25.0,50.0) 59730   52.4  54.1  43.8        21.0       506
-## 5 [ 82,  215) [ 2.0, 5.0) 35954   46.4  92.2   4.6        24.0       374
+<pre><code>##      id             name state census_region      pop_dens   pop_dens4
+## 1 19097   Jackson County    IA       Midwest [   10,   50) [ 17,   45)
+## 2 19177 Van Buren County    IA       Midwest [   10,   50) [  0,   17)
+## 3 31081  Hamilton County    NE       Midwest [   10,   50) [  0,   17)
+## 4 05013   Calhoun County    AR         South [    0,   10) [  0,   17)
+## 5 32003     Clark County    NV          West [  100,  500) [118,71672]
+##     pop_dens6   pct_black     pop female white black travel_time land_area
+## 1 [ 25,   45) [ 0.0, 2.0)   19482   50.2  97.2   0.6        23.2       636
+## 2 [  9,   25) [ 0.0, 2.0)    7468   49.2  98.3   0.2        23.4       485
+## 3 [  9,   25) [ 0.0, 2.0)    9135   49.9  98.3   0.3        17.2       543
+## 4 [  0,    9) [15.0,25.0)    5202   48.9  76.2  21.5        24.9       629
+## 5 [215,71672] [10.0,15.0) 2069681   49.8  72.7  11.5        24.1      7891
 ##   hh_income su_gun4 su_gun6  fips votes_dem_2016 votes_gop_2016
-## 1     82073 [ 5, 8) [ 4, 7) 51199          12989          18823
-## 2     31308 [11,54] [12,54] 51105           1627           7542
-## 3     43085 [ 5, 8) [ 7, 8) 20051           2669           8311
-## 4     37868 [ 5, 8) [ 7, 8) 28087          11545          13124
-## 5     42023 [ 0, 5) [ 4, 7) 18103           2766           9975
+## 1     46467 [ 8,11) [ 8,10) 19097           3837           5821
+## 2     43181 [11,54] [12,54] 19177            843           2524
+## 3     56065 [ 0, 5) [ 0, 4) 31081            873           3763
+## 4     30980 [11,54] [12,54]  5013            636           1554
+## 5     52873 [ 8,11) [ 8,10) 32003         401068         319571
 ##   total_votes_2016 per_dem_2016 per_gop_2016 diff_2016 per_dem_2012
-## 1            34062        0.381        0.553      5834        0.389
-## 2             9353        0.174        0.806      5915        0.270
-## 3            11660        0.229        0.713      5642        0.271
-## 4            25139        0.459        0.522      1579        0.488
-## 5            13440        0.206        0.742      7209        0.331
-##   per_gop_2012 diff_2012 winner partywinner16 winner12 partywinner12 flipped
-## 1        0.596      7017  Trump    Republican   Romney    Republican      No
-## 2        0.714      4252  Trump    Republican   Romney    Republican      No
-## 3        0.709      5593  Trump    Republican   Romney    Republican      No
-## 4        0.503       362  Trump    Republican   Romney    Republican      No
-## 5        0.640      3943  Trump    Republican   Romney    Republican      No</code></pre>
+## 1            10204        0.376        0.570      1984        0.578
+## 2             3526        0.239        0.716      1681        0.395
+## 3             4902        0.178        0.768      2890        0.235
+## 4             2250        0.283        0.691       918        0.304
+## 5           765421        0.524        0.418     81497        0.564
+##   per_gop_2012 diff_2012  winner partywinner16 winner12 partywinner12 flipped
+## 1        0.410      1706   Trump    Republican    Obama      Democrat     Yes
+## 2        0.581       660   Trump    Republican   Romney    Republican      No
+## 3        0.743      2446   Trump    Republican   Romney    Republican      No
+## 4        0.671       798   Trump    Republican   Romney    Republican      No
+## 5        0.419     99755 Clinton      Democrat    Obama      Democrat      No</code></pre>
 <pre class="r"><code>glimpse(county_data)</code></pre>
 <pre><code>## Rows: 3,195
 ## Columns: 32
@@ -142,7 +142,7 @@ glimpse(county_map)</code></pre>
 </div>
 <div id="joing-the-files" class="section level2">
 <h2>Joing the files</h2>
-<p>We have three files</p>
+<p>I have three files</p>
 <ol style="list-style-type: decimal">
 <li><code>nyt_mask_survey</code>, our NYT survey data,</li>
 <li><code>county_map</code> that has all polygons that define a county</li>
@@ -194,7 +194,7 @@ p1</code></pre>
 </div>
 <div id="checking-for-relationships" class="section level2">
 <h2>Checking for relationships</h2>
-<p>Does mask use acceptance have any relation with some demographics? Let us explor the relationship between country household income, population, and % who voted republican in 2016</p>
+<p>Does mask use acceptance have any relation with some demographics? Let me explore the relationship between country household income, population, and % who voted republican in 2016</p>
 <pre class="r"><code>county_masks_full %&gt;% 
   select(hh_income, pop, per_gop_2016, delta) %&gt;% 
   GGally::ggpairs()+
