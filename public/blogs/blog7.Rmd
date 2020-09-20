@@ -50,13 +50,11 @@ library(knitr)
 ```
 
 
-
-
-
+What is the relationship between IMDB ratings and gross profits of movies?
 
 # Analysis of movies- IMDB dataset
 
-We will look at a subset sample of movies, taken from the [Kaggle IMDB 5000 movie dataset](https://www.kaggle.com/carolzhangdc/imdb-5000-movie-dataset)
+I will first look at a subset sample of movies, taken from the [Kaggle IMDB 5000 movie dataset](https://www.kaggle.com/carolzhangdc/imdb-5000-movie-dataset)
 
   
 ```{r echo=TRUE, message=FALSE, warning=FALSE}
@@ -70,7 +68,7 @@ glimpse(movies)
 
 ## Data Cleaning:
 
-- We will take a look at `NA` and duplicated values:
+- I will take a look at `NA` and duplicated values:
 
 ```{r duplicates_NA, echo=TRUE}
 # Sum of duplicates

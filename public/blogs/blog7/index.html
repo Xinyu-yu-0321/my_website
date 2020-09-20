@@ -77,9 +77,10 @@
                             
 
 
+<p>What is the relationship between IMDB ratings and gross profits of movies?</p>
 <div id="analysis-of-movies--imdb-dataset" class="section level1">
 <h1>Analysis of movies- IMDB dataset</h1>
-<p>We will look at a subset sample of movies, taken from the <a href="https://www.kaggle.com/carolzhangdc/imdb-5000-movie-dataset">Kaggle IMDB 5000 movie dataset</a></p>
+<p>I will first look at a subset sample of movies, taken from the <a href="https://www.kaggle.com/carolzhangdc/imdb-5000-movie-dataset">Kaggle IMDB 5000 movie dataset</a></p>
 <pre class="r"><code># Save data set in variable &quot;movies&quot;
 movies &lt;- read_csv(here::here(&quot;data&quot;, &quot;movies.csv&quot;))
 
@@ -101,7 +102,7 @@ glimpse(movies)</code></pre>
 <div id="data-cleaning" class="section level2">
 <h2>Data Cleaning:</h2>
 <ul>
-<li>We will take a look at <code>NA</code> and duplicated values:</li>
+<li>I will take a look at <code>NA</code> and duplicated values:</li>
 </ul>
 <pre class="r"><code># Sum of duplicates
 duplicates &lt;-sum(any(duplicated(movies)))

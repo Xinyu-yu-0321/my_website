@@ -51,7 +51,8 @@ glimpse(drinks) ## Rows: 193 ## Columns: 5 ## $ country &amp;lt;chr&amp;gt; &amp
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       
       <guid>/blogs/blog7/</guid>
-      <description>Analysis of movies- IMDB dataset We will look at a subset sample of movies, taken from the Kaggle IMDB 5000 movie dataset
+      <description>What is the relationship between IMDB ratings and gross profits of movies?
+Analysis of movies- IMDB dataset I will first look at a subset sample of movies, taken from the Kaggle IMDB 5000 movie dataset
 # Save data set in variable &amp;quot;movies&amp;quot; movies &amp;lt;- read_csv(here::here(&amp;quot;data&amp;quot;, &amp;quot;movies.csv&amp;quot;)) # Take a look at the data frame glimpse(movies) ## Rows: 2,961 ## Columns: 11 ## $ title &amp;lt;chr&amp;gt; &amp;quot;Avatar&amp;quot;, &amp;quot;Titanic&amp;quot;, &amp;quot;Jurassic World&amp;quot;, &amp;quot;The Aven… ## $ genre &amp;lt;chr&amp;gt; &amp;quot;Action&amp;quot;, &amp;quot;Drama&amp;quot;, &amp;quot;Action&amp;quot;, &amp;quot;Action&amp;quot;, &amp;quot;Action&amp;quot;,… ## $ director &amp;lt;chr&amp;gt; &amp;quot;James Cameron&amp;quot;, &amp;quot;James Cameron&amp;quot;, &amp;quot;Colin Trevorr… ## $ year &amp;lt;dbl&amp;gt; 2009, 1997, 2015, 2012, 2008, 1999, 1977, 2015, … ## $ duration &amp;lt;dbl&amp;gt; 178, 194, 124, 173, 152, 136, 125, 141, 164, 93,… ## $ gross &amp;lt;dbl&amp;gt; 760505847, 658672302, 652177271, 623279547, 5333… ## $ budget &amp;lt;dbl&amp;gt; 237000000, 200000000, 150000000, 220000000, 1850… ## $ cast_facebook_likes &amp;lt;dbl&amp;gt; 4834, 45223, 8458, 87697, 57802, 37723, 13485, 9… ## $ votes &amp;lt;dbl&amp;gt; 886204, 793059, 418214, 995415, 1676169, 534658,… ## $ reviews &amp;lt;dbl&amp;gt; 3777, 2843, 1934, 2425, 5312, 3917, 1752, 1752, … ## $ rating &amp;lt;dbl&amp;gt; 7.</description>
     </item>
     
