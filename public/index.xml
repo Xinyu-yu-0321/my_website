@@ -17,8 +17,8 @@
       <pubDate>Mon, 07 Sep 2020 00:00:00 +0000</pubDate>
       
       <guid>/blogs/blog8/</guid>
-      <description>2016 California Contributors plots We will now reproduce the plot that shows the top ten cities in highest amounts raised in political contributions in California during the 2016 US Presidential election.
-knitr::include_graphics(here::here(&amp;quot;images&amp;quot;, &amp;quot;challenge2.png&amp;quot;), error = FALSE) Taking on Challenge 2 First, we read the two dataframes
+      <description>2016 California Contributors plots I will explore the top cities in highest amounts raised in political contributions in California during the 2016 US Presidential election.
+First, I will read the two dataframes
 # vroom() used to read data because we are dealing with a large dataset CA_contributors_2016 &amp;lt;- vroom::vroom(here::here(&amp;quot;data&amp;quot;,&amp;quot;CA_contributors_2016.csv&amp;quot;)) zips_df &amp;lt;- vroom::vroom(here::here(&amp;quot;data&amp;quot;, &amp;quot;zip_code_database.csv&amp;quot;)) glimpse(CA_contributors_2016) ## Rows: 1,292,843 ## Columns: 4 ## $ cand_nm &amp;lt;chr&amp;gt; &amp;quot;Clinton, Hillary Rodham&amp;quot;, &amp;quot;Clinton, Hillary Rodha… ## $ contb_receipt_amt &amp;lt;dbl&amp;gt; 50.</description>
     </item>
     

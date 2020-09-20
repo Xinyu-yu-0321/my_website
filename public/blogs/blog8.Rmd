@@ -48,16 +48,9 @@ library(knitr)
 
 # 2016 California Contributors plots
 
-We will now reproduce the plot that shows the top ten cities in highest amounts raised in political contributions in California during the 2016 US Presidential election.
+I will explore the top cities in highest amounts raised in political contributions in California during the 2016 US Presidential election.
 
-
-```{r challenge2, echo=TRUE, out.width="100%"}
-knitr::include_graphics(here::here("images", "challenge2.png"), error = FALSE)
-```
-
-## Taking on Challenge 2
-
-First, we read the two dataframes
+First, I will read the two dataframes
 ```{r, load_CA_data, warnings= FALSE, message=FALSE}
 # vroom() used to read data because we are dealing with a large dataset
 CA_contributors_2016 <- vroom::vroom(here::here("data","CA_contributors_2016.csv"))
@@ -65,9 +58,9 @@ zips_df <- vroom::vroom(here::here("data", "zip_code_database.csv"))
 glimpse(CA_contributors_2016)
 glimpse(zips_df)
 ```
-### Data Wranlging
+## Data Wranlging
 
-Only the zip codes of California are required. Specifically, we want to know the primary cities corresponding to the zips
+Only the zip codes of California are required. Specifically, I want to know the primary cities corresponding to the zips
 ```{r}
 zips_CA <- zips_df %>%
   filter(state == "CA") %>%  #filter for CA
@@ -88,9 +81,9 @@ df <- inner_join(CA_contributors_2016, zips_num, copy = FALSE) %>% #join two dat
 kable(head(df, 10))
   
 ```
-### Plotting 
+## Plotting 
 
-We chose the method that displays the same type of graph for multiple candidates. In this example, we filtered on just the 2 candidates (Hillary and Trump). If it would be desirable to analyse info of more than two candidates, the relevant ones can simply be added to the filter statement.
+I chose the method that displays the same type of graph for multiple candidates. In this example, I filtered on just the 2 candidates (Hillary and Trump). If it would be desirable to analyse info of more than two candidates, the relevant ones can simply be added to the filter statement.
 
 ```{r}
 df %>%
@@ -128,3 +121,5 @@ df %>%
           axis.text=element_text(size=7),
           axis.title=element_text(size=7))
 ```
+
+As we can see from the graph, Clinton raised most money from San Francisco while Trump raised most from Los Angeles during the 2016 US Presidential election.

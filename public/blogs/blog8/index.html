@@ -79,12 +79,8 @@
 
 <div id="california-contributors-plots" class="section level1">
 <h1>2016 California Contributors plots</h1>
-<p>We will now reproduce the plot that shows the top ten cities in highest amounts raised in political contributions in California during the 2016 US Presidential election.</p>
-<pre class="r"><code>knitr::include_graphics(here::here(&quot;images&quot;, &quot;challenge2.png&quot;), error = FALSE)</code></pre>
-<p><img src="/Users/xinyuyu/Desktop/my_website/images/challenge2.png" width="100%" style="display: block; margin: auto;" /></p>
-<div id="taking-on-challenge-2" class="section level2">
-<h2>Taking on Challenge 2</h2>
-<p>First, we read the two dataframes</p>
+<p>I will explore the top cities in highest amounts raised in political contributions in California during the 2016 US Presidential election.</p>
+<p>First, I will read the two dataframes</p>
 <pre class="r"><code># vroom() used to read data because we are dealing with a large dataset
 CA_contributors_2016 &lt;- vroom::vroom(here::here(&quot;data&quot;,&quot;CA_contributors_2016.csv&quot;))
 zips_df &lt;- vroom::vroom(here::here(&quot;data&quot;, &quot;zip_code_database.csv&quot;))
@@ -114,9 +110,9 @@ glimpse(CA_contributors_2016)</code></pre>
 ## $ decommissioned       &lt;dbl&gt; 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,…
 ## $ estimated_population &lt;dbl&gt; 384, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, …
 ## $ notes                &lt;chr&gt; NA, NA, NA, NA, NA, NA, NA, NA, NA, &quot;no NWS dat…</code></pre>
-<div id="data-wranlging" class="section level3">
-<h3>Data Wranlging</h3>
-<p>Only the zip codes of California are required. Specifically, we want to know the primary cities corresponding to the zips</p>
+<div id="data-wranlging" class="section level2">
+<h2>Data Wranlging</h2>
+<p>Only the zip codes of California are required. Specifically, I want to know the primary cities corresponding to the zips</p>
 <pre class="r"><code>zips_CA &lt;- zips_df %&gt;%
   filter(state == &quot;CA&quot;) %&gt;%  #filter for CA
   select(zip, primary_city) #retain only zips and primary city
@@ -196,9 +192,9 @@ kable(head(df, 10))</code></pre>
 </tbody>
 </table>
 </div>
-<div id="plotting" class="section level3">
-<h3>Plotting</h3>
-<p>We chose the method that displays the same type of graph for multiple candidates. In this example, we filtered on just the 2 candidates (Hillary and Trump). If it would be desirable to analyse info of more than two candidates, the relevant ones can simply be added to the filter statement.</p>
+<div id="plotting" class="section level2">
+<h2>Plotting</h2>
+<p>I chose the method that displays the same type of graph for multiple candidates. In this example, I filtered on just the 2 candidates (Hillary and Trump). If it would be desirable to analyse info of more than two candidates, the relevant ones can simply be added to the filter statement.</p>
 <pre class="r"><code>df %&gt;%
     #select top 10 cities according to contributions for each candidate
     group_by(cand_nm) %&gt;% 
@@ -234,7 +230,7 @@ kable(head(df, 10))</code></pre>
           axis.text=element_text(size=7),
           axis.title=element_text(size=7))</code></pre>
 <p><img src="/blogs/blog8_files/figure-html/unnamed-chunk-3-1.png" width="648" style="display: block; margin: auto;" /></p>
-</div>
+<p>As we can see from the graph, Clinton raised most money from San Francisco while Trump raised most from Los Angeles during the 2016 US Presidential election.</p>
 </div>
 </div>
 
